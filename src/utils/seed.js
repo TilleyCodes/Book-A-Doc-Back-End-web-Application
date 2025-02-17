@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { PatientsModel } = require('../models/patientsModel')
+const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 
 // Sample data to be seeded
 const patientsData = [
@@ -50,6 +51,39 @@ const patientsData = [
     }
 ]
 
+const availabilitiesData = [
+    {
+        date: new Date('2025-02-24'), 
+        start_time: '09:00',
+        end_time: '10:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-24'), 
+        start_time: '10:00',
+        end_time: '11:00',
+        is_booked: true
+    },
+    {
+        date: new Date('2025-02-25'), 
+        start_time: '14:00',
+        end_time: '15:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-26'), 
+        start_time: '11:00',
+        end_time: '12:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-27'), 
+        start_time: '16:00',
+        end_time: '17:00',
+        is_booked: true
+    }
+]
+
 // Function to connect to DB and seed data
 async function seedDatabase() {
     try {
@@ -59,10 +93,12 @@ async function seedDatabase() {
 
         // Clear existing data
         await PatientsModel.deleteMany({})
+        await AvailabilitiesModel.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
         await PatientsModel.insertMany(patientsData)
+        await AvailabilitiesModel.insertMany(availabilitiesData)
         console.log('Data seeded successfully')
 
         // Close the connection
