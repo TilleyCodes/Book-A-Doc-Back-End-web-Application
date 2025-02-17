@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const { PatientsModel } = require('../models/patientsModel')
 const { AvailabilitiesModel } = require('../models/availabilitiesModel')
+const { MedicalCentresModel } = require('../models/medicalCentresModel')
 
 // Sample data to be seeded
 const patientsData = [
@@ -84,6 +85,55 @@ const availabilitiesData = [
     }
 ]
 
+// Sample medical centre data to be seeded
+const medicalCentresData = [
+    {
+        medical_centre_name: 'World Square Medical Centre',
+        operating_hours: '8am - 6pm',
+        address: '1 Sydney Road, Melbourne, Australia',
+        contacts: {
+            email: 'worldsquaremc@email.com', 
+            phone: '+61 39735 8466'
+        }
+    },
+    {
+        medical_centre_name: 'Coogee Medical Centre',
+        operating_hours: '8am - 5pm',
+        address: '2 Coogee Bay Road, Sydney, Australia',
+        contacts: {
+            email: 'coogeemc@email.com', 
+            phone: '+61 29671 5382'
+        }
+    },
+    {
+        medical_centre_name: 'Sunshine Medical Centre',
+        operating_hours: '7am - 6pm',
+        address: '3 Sunny Street, Brisbane, Australia',
+        contacts: {
+            email: 'sunshinemc@email.com', 
+            phone: '07 8224 6953'
+        }
+    },
+    {
+        medical_centre_name: 'ATC Medical Centre',
+        operating_hours: '8am - 6pm',
+        address: '4 Capital Lane, Canberra, Australia',
+        contacts: {
+            email: 'atcmc@email.com',
+            phone: '02 8442 6754'
+        }
+    },
+    {
+        medical_centre_name: 'Glenelg Medical Centre',
+        operating_hours: '8am - 6pm',
+        address: '5 Glenelg Beach Road, Adelaide, Australia',
+        contacts: {
+            email: 'glenelgmc@email.com',
+            phone: '+61 88466 3222'
+        }
+    }
+]
+
 // Function to connect to DB and seed data
 async function seedDatabase() {
     try {
@@ -94,11 +144,13 @@ async function seedDatabase() {
         // Clear existing data
         await PatientsModel.deleteMany({})
         await AvailabilitiesModel.deleteMany({})
+        await MedicalCentresModel.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
         await PatientsModel.insertMany(patientsData)
         await AvailabilitiesModel.insertMany(availabilitiesData)
+        await MedicalCentresModel.insertMany(medicalCentresData)
         console.log('Data seeded successfully')
 
         // Close the connection
@@ -109,5 +161,6 @@ async function seedDatabase() {
         console.log('Error seeding database: ', error)
     }
 }
+
 
 seedDatabase()
