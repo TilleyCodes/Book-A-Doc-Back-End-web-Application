@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const { PatientsModel } = require('../models/patientsModel')
+const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 const { MedicalCentresModel } = require('../models/medicalCentresModel')
 
 // Sample data to be seeded
@@ -48,6 +49,39 @@ const patientsData = [
         address: '123 Queen St, Brisbane, QLD 4000',
         phone_number: '0423 456 789',
         password: 'olivia789'
+    }
+]
+
+const availabilitiesData = [
+    {
+        date: new Date('2025-02-24'), 
+        start_time: '09:00',
+        end_time: '10:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-24'), 
+        start_time: '10:00',
+        end_time: '11:00',
+        is_booked: true
+    },
+    {
+        date: new Date('2025-02-25'), 
+        start_time: '14:00',
+        end_time: '15:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-26'), 
+        start_time: '11:00',
+        end_time: '12:00',
+        is_booked: false
+    },
+    {
+        date: new Date('2025-02-27'), 
+        start_time: '16:00',
+        end_time: '17:00',
+        is_booked: true
     }
 ]
 
@@ -100,7 +134,6 @@ const medicalCentresData = [
     }
 ]
 
-
 // Function to connect to DB and seed data
 async function seedDatabase() {
     try {
@@ -110,33 +143,13 @@ async function seedDatabase() {
 
         // Clear existing data
         await PatientsModel.deleteMany({})
-        console.log('Existing data cleared')
-
-        // Insert new data
-        await PatientsModel.insertMany(patientsData)
-        console.log('Data seeded successfully')
-
-        // Close the connection
-        await mongoose.connection.close()
-        console.log('Database disconnected')
-
-    } catch (error) {
-        console.log('Error seeding database: ', error)
-    }
-}
-
-// Function to connect to DB and seed data
-async function seedDatabase() {
-    try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db')
-
-        console.log('Database connected')
-
-        // Clear existing data
+        await AvailabilitiesModel.deleteMany({})
         await MedicalCentresModel.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
+        await PatientsModel.insertMany(patientsData)
+        await AvailabilitiesModel.insertMany(availabilitiesData)
         await MedicalCentresModel.insertMany(medicalCentresData)
         console.log('Data seeded successfully')
 
@@ -148,5 +161,6 @@ async function seedDatabase() {
         console.log('Error seeding database: ', error)
     }
 }
+
 
 seedDatabase()
