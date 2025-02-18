@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
 const { PatientsModel } = require('../models/patientsModel')
 const { AvailabilitiesModel } = require('../models/availabilitiesModel')
-const { MedicalCentresModel } = require('../models/medicalCentresModel')
+const { MedicalCentreModel } = require('../models/medicalCentreModel')
+const { SpecialtyModel } = require('../models/specialtyModel')
 const { BookingsModel } = require('../models/bookingsModel')
 const { DoctorAvailabilitiesModel } = require('../models/doctorAvailabilitiesModel')
 
@@ -88,11 +89,14 @@ const availabilitiesData = [
 ]
 
 // Sample medical centre data to be seeded
-const medicalCentresData = [
+const medicalCentreData = [
     {
         medical_centre_name: 'World Square Medical Centre',
         operating_hours: '8am - 6pm',
-        address: '1 Sydney Road, Melbourne, Australia',
+        address: {
+            street: '1 Victoria Road',
+            city: 'Melbourne, Australia',
+        }, 
         contacts: {
             email: 'worldsquaremc@email.com', 
             phone: '+61 39735 8466'
@@ -101,7 +105,10 @@ const medicalCentresData = [
     {
         medical_centre_name: 'Coogee Medical Centre',
         operating_hours: '8am - 5pm',
-        address: '2 Coogee Bay Road, Sydney, Australia',
+        address: {
+            street: '2 Coogee Bay Road',
+            city: 'Sydney, Australia',
+        },
         contacts: {
             email: 'coogeemc@email.com', 
             phone: '+61 29671 5382'
@@ -110,7 +117,10 @@ const medicalCentresData = [
     {
         medical_centre_name: 'Sunshine Medical Centre',
         operating_hours: '7am - 6pm',
-        address: '3 Sunny Street, Brisbane, Australia',
+        address: {
+            street: '3 Sunny Street', 
+            city: 'Brisbane, Australia',
+        },
         contacts: {
             email: 'sunshinemc@email.com', 
             phone: '07 8224 6953'
@@ -119,7 +129,10 @@ const medicalCentresData = [
     {
         medical_centre_name: 'ATC Medical Centre',
         operating_hours: '8am - 6pm',
-        address: '4 Capital Lane, Canberra, Australia',
+        address: {
+            street: '4 Capital Lane',
+            city: 'Canberra, Australia',
+        },
         contacts: {
             email: 'atcmc@email.com',
             phone: '02 8442 6754'
@@ -128,13 +141,55 @@ const medicalCentresData = [
     {
         medical_centre_name: 'Glenelg Medical Centre',
         operating_hours: '8am - 6pm',
-        address: '5 Glenelg Beach Road, Adelaide, Australia',
+        address: {
+            street: '5 Glenelg Beach Road',
+            city: 'Adelaide, Australia',
+        },
         contacts: {
             email: 'glenelgmc@email.com',
             phone: '+61 88466 3222'
         }
-    }
+    },
+    {
+        medical_centre_name: 'Bondi Junction Medical Centre',
+        operating_hours: '9am - 7pm',
+        address: {
+            street: '6 Junction Street',
+            city: 'Sydney, Australia',
+        },
+        contacts: {
+            email: 'bondijunctionmc@email.com',
+            phone: '02 9670 2003'
+        }
+    },
 ]
+
+const specialtiesData = [
+    {
+        specialty_name: "GP Women's Health",
+        description: "Specialised care in women's health including reproductive health, pregnancy care, and menopause management."
+    },
+    {
+        specialty_name: "GP Men's Health",
+        description: "Focused on male-specific health issues including prostate health and testosterone management."
+    },
+    {
+        specialty_name: "GP Skin Checks",
+        description: "Comprehensive skin examinations and early detection of skin cancers."
+    },
+    {
+        specialty_name: "GP Baby & Child Health",
+        description: "Specialised care for infants and children including vaccinations and developmental assessments."
+    },
+    {
+        specialty_name: "GP Mental Health",
+        description: "Support for anxiety, depression, and other mental health concerns."
+    },
+    {
+        specialty_name: "GP Chronic Disease Management",
+        description: "Management of ongoing conditions like diabetes, heart disease, and asthma."
+    }
+];
 
 const bookingsData = []
 
@@ -148,14 +203,16 @@ async function seedDatabase() {
         // Clear existing data
         await PatientsModel.deleteMany({})
         await AvailabilitiesModel.deleteMany({})
-        await MedicalCentresModel.deleteMany({})
+        await MedicalCentreModel.deleteMany({})
+        await SpecialtyModel.deleteMany({})
         await BookingsModel.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
         const insertedPatients = await PatientsModel.insertMany(patientsData)
         const insertedAvailabilities = await AvailabilitiesModel.insertMany(availabilitiesData)
-        await MedicalCentresModel.insertMany(medicalCentresData)
+        const insertedMedicalCentres = await MedicalCentreModel.insertMany(medicalCentresData)
+        const insertedSpecialties = await SpecialtyModel.insertMany(specialtiesData)
         console.log('Primary data seeded successfully')
 
         const bookingsData = [
@@ -224,7 +281,11 @@ async function seedDatabase() {
         console.log('Database disconnected')
 
     } catch (error) {
-        console.log('Error seeding database: ', error)
+        console.log('Error seeding database: ', error.message);
+        // Ensure the connection is closed even if there's an error
+        if (mongoose.connection.readyState !== 0) {
+            await mongoose.connection.close();
+        }
     }
 }
 
