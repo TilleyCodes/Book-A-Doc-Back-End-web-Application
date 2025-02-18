@@ -7,7 +7,7 @@ async function fetchBookings() {
 
         const bookings = await BookingsModel.find({})
             .populate('patient_id', 'fname lname')
-            .populate('availability_id', 'status')
+            .populate('availability_id', 'date start_time end_time is_booked')
         console.log('Current Bookings:', bookings)
 
         await mongoose.connection.close()
