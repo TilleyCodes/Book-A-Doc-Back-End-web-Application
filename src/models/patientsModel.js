@@ -4,11 +4,14 @@ const mongoose = require('mongoose')
 const PatientsSchema = new mongoose.Schema({
     fname: String,
     lname: String,
-    email: String,
+    email: {
+        type: String,
+        unique: true // Handle errors in routes
+    },
     date_of_birth: Date,
     address: String,
     phone_number: String,
-    password: String,
+    password: String, // Handle validation in front-end
 })
 
 // Model that uses schema
