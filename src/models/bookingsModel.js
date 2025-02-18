@@ -12,17 +12,14 @@ const BookingsSchema = new mongoose.Schema({
     patient_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patients',
-        required: true,
     },
     doctor_id: { // to be updated once doctorsModel has been created
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Doctors',
-        required: true,
     }, 
     availability_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Availabilities',
-        required: true,
     }, 
 }, {timestamps: true})
 

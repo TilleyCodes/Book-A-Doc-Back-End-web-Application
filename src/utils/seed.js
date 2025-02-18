@@ -3,6 +3,7 @@ const { PatientsModel } = require('../models/patientsModel')
 const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 const { MedicalCentresModel } = require('../models/medicalCentresModel')
 const { BookingsModel } = require('../models/bookingsModel')
+const { DoctorAvailabilitiesModel } = require('../models/doctorAvailabilitiesModel')
 
 // Sample data to be seeded
 const patientsData = [
@@ -190,8 +191,32 @@ async function seedDatabase() {
             },
           ]
 
+          const doctorAvailabilityData = [
+            {
+                availability_id: insertedAvailabilities[0]._id,
+                doctor_id: new mongoose.Types.ObjectId(), // Replace with a valid doctor _id when available
+            },
+            {
+                availability_id: insertedAvailabilities[1]._id,
+                doctor_id: new mongoose.Types.ObjectId(), 
+            },
+            {
+                availability_id: insertedAvailabilities[2]._id,
+                doctor_id: new mongoose.Types.ObjectId(), 
+            },
+            {
+                availability_id: insertedAvailabilities[3]._id,
+                doctor_id: new mongoose.Types.ObjectId(), 
+            },
+            {
+                availability_id: insertedAvailabilities[4]._id,
+                doctor_id: new mongoose.Types.ObjectId(), 
+            },
+          ]
+
         // Insert bookingData
         await BookingsModel.insertMany(bookingsData)
+        await DoctorAvailabilitiesModel.insertMany(doctorAvailabilityData)
         console.log('Bookings seeded successfully')
 
         // Close the connection
