@@ -3,6 +3,7 @@ const { PatientsModel } = require('../models/patientsModel')
 const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 const { MedicalCentreModel } = require('../models/medicalCentreModel')
 const { SpecialtyModel } = require('../models/specialtyModel')
+const { DoctorModel } = require('../models/doctorModel')
 const { BookingsModel } = require('../models/bookingsModel')
 const { DoctorAvailabilitiesModel } = require('../models/doctorAvailabilitiesModel')
 
@@ -205,6 +206,7 @@ async function seedDatabase() {
         await AvailabilitiesModel.deleteMany({})
         await MedicalCentreModel.deleteMany({})
         await SpecialtyModel.deleteMany({})
+        await DoctorModel.deleteMany({})
         await BookingsModel.deleteMany({})
         console.log('Existing data cleared')
 
@@ -214,6 +216,41 @@ async function seedDatabase() {
         const insertedMedicalCentres = await MedicalCentreModel.insertMany(medicalCentresData)
         const insertedSpecialties = await SpecialtyModel.insertMany(specialtiesData)
         console.log('Primary data seeded successfully')
+
+        const doctorsData = [
+            {
+                dr_name: 'Pepe Poo',
+                specialty_id: insertedSpecialties[0]._id,
+            },
+            {
+                dr_name: 'Bandit Boy',
+                specialty_id: insertedSpecialties[1]._id,
+            },
+            {
+                dr_name: 'Yogi Bear',
+                specialty_id: insertedSpecialties[2]._id,
+            },
+            {
+                dr_name: 'Mia Moo',
+                specialty_id: insertedSpecialties[3]._id,
+            },
+            {
+                dr_name: 'Ella Bell',
+                specialty_id: insertedSpecialties[4]._id,
+            },
+            {
+                dr_name: 'Frank Fudge',
+                specialty_id: insertedSpecialties[5]._id,
+            },
+            {
+                dr_name: 'Coco Nut',
+                specialty_id: insertedSpecialties[2]._id,
+            },
+            {
+                dr_name: 'Snowy Ball',
+                specialty_id: insertedSpecialties[4]._id,
+            },
+        ]
 
         const bookingsData = [
             {
