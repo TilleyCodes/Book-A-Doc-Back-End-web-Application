@@ -1,9 +1,20 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const PORT = process.env.PORT || 3000
+const { PatientsRouter } = require("./routes/patientsRouter")
 
 const app = express()
 
 app.use(express.json())
+
+app.get('/', (request, response) => {
+    console.log('User visited home page.')
+    response.json({
+        message: 'Hello world!'
+    })
+})
+
+app.use('/patients', PatientsRouter)
 
 // ERROR HANDLING
 // Wildcard * means "match any route"
@@ -17,6 +28,7 @@ app.get('*', (request, response) => {
     })
 })
 
+
 // Error handling catcher
 // applies to every route in the server by using .use
 app.use((error, request, response, next) => {
@@ -27,8 +39,8 @@ app.use((error, request, response, next) => {
     })
 })
 
-app.listen(3000, async () => {
-    console.log("Server started")
+app.listen(PORT, async () => {
+    console.log(`Server started on port ${PORT}`)
     await mongoose.connect("mongodb://127.0.0.1:27017/book_a_doc_db")
     console.log("Database connected")
 })

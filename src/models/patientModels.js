@@ -18,4 +18,4 @@ const PatientsSchema = new mongoose.Schema({
 const PatientsModel = mongoose.model('Patients', PatientsSchema)
 
 // Export model
-module.exports = {PatientsModel}
+module.exports = { PatientsModel }
