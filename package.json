@@ -8,7 +8,9 @@
     "seed": "node src/utils/seed.js",
     "wipe": "node src/utils/wipe.js",
     "fetchP": "node src/utils/fetchPatients.js",
-    "fetchA": "node src/utils/fetchAvailabilities.js"
+    "fetchA": "node src/utils/fetchAvailabilities.js",
+    "fetchMC": "node src/utils/fetchMedicalCentres.js",
+    "fetchB": "node src/utils/fetchBookings.js"
   },
   "keywords": [],
   "author": "",

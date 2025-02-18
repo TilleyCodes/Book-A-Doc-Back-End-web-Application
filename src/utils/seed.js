@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { PatientsModel } = require('../models/patientsModel')
 const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 const { MedicalCentresModel } = require('../models/medicalCentresModel')
+const { BookingsModel } = require('../models/bookingsModel')
 
 // Sample data to be seeded
 const patientsData = [
@@ -134,6 +135,8 @@ const medicalCentresData = [
     }
 ]
 
+const bookingsData = []
+
 // Function to connect to DB and seed data
 async function seedDatabase() {
     try {
@@ -145,13 +148,51 @@ async function seedDatabase() {
         await PatientsModel.deleteMany({})
         await AvailabilitiesModel.deleteMany({})
         await MedicalCentresModel.deleteMany({})
+        await BookingsModel.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
-        await PatientsModel.insertMany(patientsData)
-        await AvailabilitiesModel.insertMany(availabilitiesData)
+        const insertedPatients = await PatientsModel.insertMany(patientsData)
+        const insertedAvailabilities = await AvailabilitiesModel.insertMany(availabilitiesData)
         await MedicalCentresModel.insertMany(medicalCentresData)
-        console.log('Data seeded successfully')
+        console.log('Primary data seeded successfully')
+
+        const bookingsData = [
+            {
+              status: 'pending',
+              patient_id: insertedPatients[0]._id,
+              doctor_id: new mongoose.Types.ObjectId(), // Replace with a valid doctor _id when available
+              availability_id: insertedAvailabilities[0]._id,
+            },
+            {
+              status: 'confirmed',
+              patient_id: insertedPatients[1]._id,
+              doctor_id: new mongoose.Types.ObjectId(),
+              availability_id: insertedAvailabilities[1]._id,
+            },
+            {
+              status: 'cancelled',
+              patient_id: insertedPatients[2]._id,
+              doctor_id: new mongoose.Types.ObjectId(),
+              availability_id: insertedAvailabilities[2]._id,
+            },
+            {
+              status: 'confirmed',
+              patient_id: insertedPatients[3]._id,
+              doctor_id: new mongoose.Types.ObjectId(),
+              availability_id: insertedAvailabilities[3]._id,
+            },
+            {
+              status: 'pending',
+              patient_id: insertedPatients[4]._id,
+              doctor_id: new mongoose.Types.ObjectId(),
+              availability_id: insertedAvailabilities[4]._id,
+            },
+          ]
+
+        // Insert bookingData
+        await BookingsModel.insertMany(bookingsData)
+        console.log('Bookings seeded successfully')
 
         // Close the connection
         await mongoose.connection.close()
