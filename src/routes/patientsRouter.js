@@ -3,6 +3,7 @@ const PatientsRouter = express.Router()
 
 const {
     getPatients,
+    getPatient,
 } = require('../controllers/patientsController')
 
 // GET ALL | http://localhost:3000/patients 
@@ -14,8 +15,18 @@ PatientsRouter.get(
     }
 )
 
-// GET ONE | http://localhost:3000/patients/patient_id
-
+// GET ONE | http://localhost:3000/patients/patientId
+PatientsRouter.get(
+    '/:patientId',
+    async (request, response) => {
+        const patient = await getPatient(request.params.patientId)
+        if (patient) {
+            response.status(200).json(patient)
+        } else {
+            response.status(404).json({error: `Patient with id: ${request.params.patientId} does not exist`})
+        }
+    }
+)
 
 // CREATE | http://localhost:3000/patients
 
@@ -27,5 +38,5 @@ PatientsRouter.get(
 
 
 module.exports = {
-    PatientsRouter,
+    PatientsRouter
 }
