@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 
 const doctorCentreSchema = new mongoose.Schema({
-    doctor_id: {
+    doctorId: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'doctor'
+        ref: 'Doctor'
     },
-    medical_centre_id: {
+    medicalCentreId: {
         type: mongoose.SchemaTypes.ObjectId,
-        ref: 'medical_centre'
+        ref: 'MedicalCentre'
     }
 });
 
-const DoctorCentreModel = mongoose.model('DoctorCentre', doctorCentreSchema);
+const DoctorCentre = mongoose.model('DoctorCentre', doctorCentreSchema);
 
-module.exports = { DoctorCentreModel };
+module.exports = { DoctorCentre };

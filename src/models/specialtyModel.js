@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const specialtySchema = new mongoose.Schema({
-    specialty_name: {
+    specialtyName: {
         type: String,
         required: [true, 'Specialty name is required'],
         unique: true
@@ -13,8 +13,8 @@ const specialtySchema = new mongoose.Schema({
 });
 
 // Add index for faster queries
-specialtySchema.index({ 'specialty_name': 1 });
+specialtySchema.index({ 'specialtyName': 1 });
 
-const SpecialtyModel = mongoose.model('Specialty', specialtySchema);
+const Specialty = mongoose.model('Specialty', specialtySchema);
 
-module.exports = { SpecialtyModel };
+module.exports = { Specialty };

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { DoctorCentreModel } = require('../models/doctorCentreModel')
+const { DoctorCentreModel } = require('../models/doctorCentresModel')
 
 async function fetchDoctorCentres() {
     try {
