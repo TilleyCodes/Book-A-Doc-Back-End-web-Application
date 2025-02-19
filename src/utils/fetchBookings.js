@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
-const { BookingsModel } = require('../models/bookingsModel')
+const Booking = require('../models/booking')
 
 async function fetchBookings() {
     try {
         await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db')
 
-        const bookings = await BookingsModel.find({})
-            .populate('patient_id', 'fname lname')
-            .populate('availability_id', 'date start_time end_time is_booked')
+        const bookings = await Booking.find({})
+            .populate('patientId', 'firstName lastName')
+            .populate('doctorId, doctorName')
+            .populate('availabilityId', 'date startTime endTime isBooked')
         console.log('Current Bookings:', bookings)
 
         await mongoose.connection.close()
