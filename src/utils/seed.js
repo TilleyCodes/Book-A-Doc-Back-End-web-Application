@@ -4,6 +4,7 @@ const { AvailabilitiesModel } = require('../models/availabilitiesModel')
 const { MedicalCentreModel } = require('../models/medicalCentreModel')
 const { SpecialtyModel } = require('../models/specialtyModel')
 const { DoctorModel } = require('../models/doctorModel')
+const { DoctorCentre } = require('../models/doctorCentreModel')
 const { BookingsModel } = require('../models/bookingsModel')
 const { DoctorAvailabilitiesModel } = require('../models/doctorAvailabilitiesModel')
 
@@ -90,7 +91,7 @@ const availabilitiesData = [
 ]
 
 // Sample medical centre data to be seeded
-const medicalCentreData = [
+const medicalCentresData = [
     {
         medical_centre_name: 'World Square Medical Centre',
         operating_hours: '8am - 6pm',
@@ -207,6 +208,7 @@ async function seedDatabase() {
         await MedicalCentreModel.deleteMany({})
         await SpecialtyModel.deleteMany({})
         await DoctorModel.deleteMany({})
+        await DoctorCentreModel.deleteMany({})
         await BookingsModel.deleteMany({})
         console.log('Existing data cleared')
 
@@ -215,6 +217,7 @@ async function seedDatabase() {
         const insertedAvailabilities = await AvailabilitiesModel.insertMany(availabilitiesData)
         const insertedMedicalCentres = await MedicalCentreModel.insertMany(medicalCentresData)
         const insertedSpecialties = await SpecialtyModel.insertMany(specialtiesData)
+        const insertedDoctors = await DoctorModel.insertMany(doctorsData)
         console.log('Primary data seeded successfully')
 
         const doctorsData = [
@@ -252,35 +255,70 @@ async function seedDatabase() {
             },
         ]
 
+        const doctorCentresData = [
+            {
+                doctor_id: insertedDoctors[0]._id,
+                medical_centre_id: insertedMedicalCentres[0]._id,
+            },
+            {
+                doctor_id: insertedDoctors[1]._id,
+                medical_centre_id: insertedMedicalCentres[1]._id,
+            },
+            {
+                doctor_id: insertedDoctors[2]._id,
+                medical_centre_id: insertedMedicalCentres[2]._id,
+            },
+            {
+                doctor_id: insertedDoctors[3]._id,
+                medical_centre_id: insertedMedicalCentres[3]._id,
+            },
+            {
+                doctor_id: insertedDoctors[4]._id,
+                medical_centre_id: insertedMedicalCentres[14]._id,
+            },
+            {
+                doctor_id: insertedDoctors[5]._id,
+                medical_centre_id: insertedMedicalCentres[5]._id,
+            },
+            {
+                doctor_id: insertedDoctors[6]._id,
+                medical_centre_id: insertedMedicalCentres[1]._id,
+            },
+            {
+                doctor_id: insertedDoctors[7]._id,
+                medical_centre_id: insertedMedicalCentres[2]._id
+            }
+        ]
+
         const bookingsData = [
             {
               status: 'pending',
               patient_id: insertedPatients[0]._id,
-              doctor_id: new mongoose.Types.ObjectId(), // Replace with a valid doctor _id when available
+              doctor_id: insertedDoctors[7]._id, 
               availability_id: insertedAvailabilities[0]._id,
             },
             {
               status: 'confirmed',
               patient_id: insertedPatients[1]._id,
-              doctor_id: new mongoose.Types.ObjectId(),
+              doctor_id: insertedDoctors[6]._id,
               availability_id: insertedAvailabilities[1]._id,
             },
             {
               status: 'cancelled',
               patient_id: insertedPatients[2]._id,
-              doctor_id: new mongoose.Types.ObjectId(),
+              doctor_id: insertedDoctors[5]._id,
               availability_id: insertedAvailabilities[2]._id,
             },
             {
               status: 'confirmed',
               patient_id: insertedPatients[3]._id,
-              doctor_id: new mongoose.Types.ObjectId(),
+              doctor_id: insertedDoctors[4]._id,
               availability_id: insertedAvailabilities[3]._id,
             },
             {
               status: 'pending',
               patient_id: insertedPatients[4]._id,
-              doctor_id: new mongoose.Types.ObjectId(),
+              doctor_id: insertedDoctors[3]._id,
               availability_id: insertedAvailabilities[4]._id,
             },
           ]
@@ -288,23 +326,23 @@ async function seedDatabase() {
           const doctorAvailabilityData = [
             {
                 availability_id: insertedAvailabilities[0]._id,
-                doctor_id: new mongoose.Types.ObjectId(), // Replace with a valid doctor _id when available
+                doctor_id: insertedDoctors[0]._id,
             },
             {
                 availability_id: insertedAvailabilities[1]._id,
-                doctor_id: new mongoose.Types.ObjectId(), 
+                doctor_id: insertedDoctors[1]._id,
             },
             {
                 availability_id: insertedAvailabilities[2]._id,
-                doctor_id: new mongoose.Types.ObjectId(), 
+                doctor_id: insertedDoctors[2]._id,
             },
             {
                 availability_id: insertedAvailabilities[3]._id,
-                doctor_id: new mongoose.Types.ObjectId(), 
+                doctor_id: insertedDoctors[3]._id,
             },
             {
                 availability_id: insertedAvailabilities[4]._id,
-                doctor_id: new mongoose.Types.ObjectId(), 
+                doctor_id: insertedDoctors[4]._id,
             },
           ]
 
