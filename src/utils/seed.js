@@ -1,103 +1,118 @@
 const mongoose = require('mongoose')
-const { PatientsModel } = require('../models/patientsModel')
-const { AvailabilitiesModel } = require('../models/availabilityModel')
-const { MedicalCentresModel } = require('../models/medicalCentresModel')
-const { SpecialtiesModel } = require('../models/specialtiesModel')
-const { DoctorsModel } = require('../models/doctorsModel')
-const { DoctorCentresModel } = require('../models/doctorCentressModel')
-const { BookingsModel } = require('../models/bookingsModel')
-const { DoctorAvailabilitiesModel } = require('../models/doctorAvailabilitiesModel')
+const Patient = require('../models/patient')
+const Availability = require('../models/availability')
+const MedicalCentre = require('../models/medicalCentre')
+const Specialty = require('../models/specialty')
+const Doctor = require('../models/doctor')
+const DoctorCentre = require('../models/doctorCentre')
+const Booking = require('../models/booking')
+const DoctorAvailability = require('../models/doctorAvailability')
 
 // Sample data to be seeded
 const patientsData = [
     {
-        fname: 'John',
-        lname: 'Doe',
+        firstName: 'John',
+        lastName: 'Doe',
         email: 'john.doe@example.com',
-        date_of_birth: new Date('1990-01-01'),
-        address: '123 Main St, Anytown, Australia',
+        dateOfBirth: new Date('1990-01-01'),
+        address: {
+            street: '123 Main St', 
+            city: 'Anytown'
+        },
         phone_number: '0400 928 882',
         password: 'password123'
     },
     {
-        fname: 'Jane',
-        lname: 'Smith',
+        firstName: 'Jane',
+        lastName: 'Smith',
         email: 'jane.smith@example.com',
-        date_of_birth: new Date('1985-05-15'),
-        address: '456 Elm St, Othertown, Australia',
+        dateOfBirth: new Date('1985-05-15'),
+        address: {
+            street: '456 Elm St', 
+            city: 'Othertown'
+        },
         phone_number: '0433 393 203',
         password: 'password456'
     },
     {
-        fname: 'Emily',
-        lname: 'Johnson',
+        firstName: 'Emily',
+        lastName: 'Johnson',
         email: 'emily.johnson@example.com',
-        date_of_birth: new Date('1988-07-22'),
-        address: '789 George St, Sydney, NSW 2000',
+        dateOfBirth: new Date('1988-07-22'),
+        address: {
+            street: '789 George St',
+            city: 'Sydney'
+        },
         phone_number: '0412 345 678',
-        password: 'emily123'
+        password: 'emilyj1234'
     },
     {
-        fname: 'Liam',
-        lname: 'Brown',
+        firstName: 'Liam',
+        lastName: 'Brown',
         email: 'liam.brown@example.com',
-        date_of_birth: new Date('1995-03-14'),
-        address: '456 Collins St, Melbourne, VIC 3000',
+        dateOfBirth: new Date('1995-03-14'),
+        address: {
+            street: '456 Collins St', 
+            city: 'Melbourne'
+        },
         phone_number: '0401 234 567',
-        password: 'liam456'
+        password: 'liambrown456'
     },
     {
-        fname: 'Olivia',
-        lname: 'Davis',
+        firstName: 'Olivia',
+        lastName: 'Davis',
         email: 'olivia.davis@example.com',
-        date_of_birth: new Date('1992-11-05'),
-        address: '123 Queen St, Brisbane, QLD 4000',
+        dateOfBirth: new Date('1992-11-05'),
+        address: {
+            street: '123 Queen St', 
+            city: 'Brisbane'
+        },
         phone_number: '0423 456 789',
-        password: 'olivia789'
+        password: 'olivia78910'
     }
 ]
 
 const availabilitiesData = [
     {
         date: new Date('2025-02-24'), 
-        start_time: '09:00',
-        end_time: '10:00',
-        is_booked: false
+        startTime: '09:00',
+        endTime: '10:00',
+        isBooked: false
     },
     {
         date: new Date('2025-02-24'), 
-        start_time: '10:00',
-        end_time: '11:00',
-        is_booked: true
+        startTime: '10:00',
+        endTime: '11:00',
+        isBooked: true
     },
     {
         date: new Date('2025-02-25'), 
-        start_time: '14:00',
-        end_time: '15:00',
-        is_booked: false
+        startTime: '14:00',
+        endTime: '15:00',
+        isBooked: false
     },
     {
         date: new Date('2025-02-26'), 
-        start_time: '11:00',
-        end_time: '12:00',
-        is_booked: false
+        startTime: '11:00',
+        endTime: '12:00',
+        isBooked: false
     },
     {
         date: new Date('2025-02-27'), 
-        start_time: '16:00',
-        end_time: '17:00',
-        is_booked: true
+        startTime: '16:00',
+        endTime: '17:00',
+        isBooked: true
     }
 ]
 
 // Sample medical centre data to be seeded
 const medicalCentresData = [
     {
-        medical_centre_name: 'World Square Medical Centre',
-        operating_hours: '8am - 6pm',
+        medicalCentreName: 'World Square Medical Centre',
+        operatingHours: '8am - 6pm',
         address: {
             street: '1 Victoria Road',
-            city: 'Melbourne, Australia',
+            city: 'Melbourne'
         }, 
         contacts: {
             email: 'worldsquaremc@email.com', 
@@ -105,11 +120,11 @@ const medicalCentresData = [
         }
     },
     {
-        medical_centre_name: 'Coogee Medical Centre',
-        operating_hours: '8am - 5pm',
+        medicalCentreName: 'Coogee Medical Centre',
+        operatingHours: '8am - 5pm',
         address: {
             street: '2 Coogee Bay Road',
-            city: 'Sydney, Australia',
+            city: 'Sydney'
         },
         contacts: {
             email: 'coogeemc@email.com', 
@@ -117,11 +132,11 @@ const medicalCentresData = [
         }
     },
     {
-        medical_centre_name: 'Sunshine Medical Centre',
-        operating_hours: '7am - 6pm',
+        medicalCentreName: 'Sunshine Medical Centre',
+        operatingHours: '7am - 6pm',
         address: {
             street: '3 Sunny Street', 
-            city: 'Brisbane, Australia',
+            city: 'Brisbane'
         },
         contacts: {
             email: 'sunshinemc@email.com', 
@@ -129,11 +144,11 @@ const medicalCentresData = [
         }
     },
     {
-        medical_centre_name: 'ATC Medical Centre',
-        operating_hours: '8am - 6pm',
+        medicalCentreName: 'ATC Medical Centre',
+        operatingHours: '8am - 6pm',
         address: {
             street: '4 Capital Lane',
-            city: 'Canberra, Australia',
+            city: 'Canberra'
         },
         contacts: {
             email: 'atcmc@email.com',
@@ -141,11 +156,11 @@ const medicalCentresData = [
         }
     },
     {
-        medical_centre_name: 'Glenelg Medical Centre',
-        operating_hours: '8am - 6pm',
+        medicalCentreName: 'Glenelg Medical Centre',
+        operatingHours: '8am - 6pm',
         address: {
             street: '5 Glenelg Beach Road',
-            city: 'Adelaide, Australia',
+            city: 'Adelaide'
         },
         contacts: {
             email: 'glenelgmc@email.com',
@@ -153,11 +168,11 @@ const medicalCentresData = [
         }
     },
     {
-        medical_centre_name: 'Bondi Junction Medical Centre',
-        operating_hours: '9am - 7pm',
+        medicalCentreName: 'Bondi Junction Medical Centre',
+        operatingHours: '9am - 7pm',
         address: {
             street: '6 Junction Street',
-            city: 'Sydney, Australia',
+            city: 'Sydney'
         },
         contacts: {
             email: 'bondijunctionmc@email.com',
@@ -168,27 +183,27 @@ const medicalCentresData = [
 
 const specialtiesData = [
     {
-        specialty_name: "GP Women's Health",
+        specialtyName: "GP Women's Health",
         description: "Specialised care in women's health including reproductive health, pregnancy care, and menopause management."
     },
     {
-        specialty_name: "GP Men's Health",
+        specialtyName: "GP Men's Health",
         description: "Focused on male-specific health issues including prostate health and testosterone management."
     },
     {
-        specialty_name: "GP Skin Checks",
+        specialtyName: "GP Skin Checks",
         description: "Comprehensive skin examinations and early detection of skin cancers."
     },
     {
-        specialty_name: "GP Baby & Child Health",
+        specialtyName: "GP Baby & Child Health",
         description: "Specialised care for infants and children including vaccinations and developmental assessments."
     },
     {
-        specialty_name: "GP Mental Health",
+        specialtyName: "GP Mental Health",
         description: "Support for anxiety, depression, and other mental health concerns."
     },
     {
-        specialty_name: "GP Chronic Disease Management",
+        specialtyName: "GP Chronic Disease Management",
         description: "Management of ongoing conditions like diabetes, heart disease, and asthma."
     }
 ];
@@ -203,152 +218,151 @@ async function seedDatabase() {
         console.log('Database connected')
 
         // Clear existing data
-        await PatientsModel.deleteMany({})
-        await AvailabilitiesModel.deleteMany({})
-        await MedicalCentreModel.deleteMany({})
-        await SpecialtyModel.deleteMany({})
-        await DoctorModel.deleteMany({})
-        await DoctorCentreModel.deleteMany({})
-        await BookingsModel.deleteMany({})
+        await Patient.deleteMany({})
+        await Availability.deleteMany({})
+        await MedicalCentre.deleteMany({})
+        await Specialty.deleteMany({})
+        await Doctor.deleteMany({})
+        await DoctorCentre.deleteMany({})
+        await Booking.deleteMany({})
         console.log('Existing data cleared')
 
         // Insert new data
-        const insertedPatients = await PatientsModel.insertMany(patientsData)
-        const insertedAvailabilities = await AvailabilitiesModel.insertMany(availabilitiesData)
-        const insertedMedicalCentres = await MedicalCentreModel.insertMany(medicalCentresData)
-        const insertedSpecialties = await SpecialtyModel.insertMany(specialtiesData)
-        const insertedDoctors = await DoctorModel.insertMany(doctorsData)
+        const insertedPatients = await Patient.insertMany(patientsData)
+        const insertedAvailabilities = await Availability.insertMany(availabilitiesData)
+        const insertedMedicalCentres = await MedicalCentre.insertMany(medicalCentresData)
+        const insertedSpecialties = await Specialty.insertMany(specialtiesData)
+        const insertedDoctors = await Doctor.insertMany(doctorsData)
         console.log('Primary data seeded successfully')
 
         const doctorsData = [
             {
-                dr_name: 'Pepe Poo',
+                doctorName: 'Pepe Poo',
                 specialty_id: insertedSpecialties[0]._id,
             },
             {
-                dr_name: 'Bandit Boy',
-                specialty_id: insertedSpecialties[1]._id,
+                doctorName: 'Bandit Boy',
+                specialtyId: insertedSpecialties[1]._id,
             },
             {
-                dr_name: 'Yogi Bear',
-                specialty_id: insertedSpecialties[2]._id,
+                doctorName: 'Yogi Bear',
+                specialtyId: insertedSpecialties[2]._id,
             },
             {
-                dr_name: 'Mia Moo',
-                specialty_id: insertedSpecialties[3]._id,
+                doctorName: 'Mia Moo',
+                specialtyId: insertedSpecialties[3]._id,
             },
             {
-                dr_name: 'Ella Bell',
-                specialty_id: insertedSpecialties[4]._id,
+                doctorName: 'Ella Bell',
+                specialtyId: insertedSpecialties[4]._id,
             },
             {
-                dr_name: 'Frank Fudge',
-                specialty_id: insertedSpecialties[5]._id,
+                doctorName: 'Frank Fudge',
+                specialtyId: insertedSpecialties[5]._id,
             },
             {
-                dr_name: 'Coco Nut',
-                specialty_id: insertedSpecialties[2]._id,
+                doctorName: 'Coco Nut',
+                specialtyId: insertedSpecialties[2]._id,
             },
             {
-                dr_name: 'Snowy Ball',
-                specialty_id: insertedSpecialties[4]._id,
+                doctorName: 'Snowy Ball',
+                specialtyId: insertedSpecialties[4]._id,
             },
         ]
 
         const doctorCentresData = [
             {
-                doctor_id: insertedDoctors[0]._id,
-                medical_centre_id: insertedMedicalCentres[0]._id,
+                doctorId: insertedDoctors[0]._id,
+                medicalCentreId: insertedMedicalCentres[0]._id,
             },
             {
                 doctor_id: insertedDoctors[1]._id,
-                medical_centre_id: insertedMedicalCentres[1]._id,
+                medicalCentreId: insertedMedicalCentres[1]._id,
             },
             {
                 doctor_id: insertedDoctors[2]._id,
-                medical_centre_id: insertedMedicalCentres[2]._id,
+                medicalCentreId: insertedMedicalCentres[2]._id,
             },
             {
                 doctor_id: insertedDoctors[3]._id,
-                medical_centre_id: insertedMedicalCentres[3]._id,
+                medicalCentreId: insertedMedicalCentres[3]._id,
             },
             {
                 doctor_id: insertedDoctors[4]._id,
-                medical_centre_id: insertedMedicalCentres[14]._id,
+                medicalCentreId: insertedMedicalCentres[14]._id,
             },
             {
                 doctor_id: insertedDoctors[5]._id,
-                medical_centre_id: insertedMedicalCentres[5]._id,
+                medicalCentreId: insertedMedicalCentres[5]._id,
             },
             {
                 doctor_id: insertedDoctors[6]._id,
-                medical_centre_id: insertedMedicalCentres[1]._id,
+                medicalCentreId: insertedMedicalCentres[1]._id,
             },
             {
                 doctor_id: insertedDoctors[7]._id,
-                medical_centre_id: insertedMedicalCentres[2]._id
+                medicalCentreId: insertedMedicalCentres[2]._id
             }
         ]
 
         const bookingsData = [
             {
               status: 'pending',
-              patient_id: insertedPatients[0]._id,
-              doctor_id: insertedDoctors[7]._id, 
-              availability_id: insertedAvailabilities[0]._id,
+              patientId: insertedPatients[0]._id,
+              doctorId: insertedDoctors[7]._id, 
+              availabilityId: insertedAvailabilities[0]._id,
             },
             {
               status: 'confirmed',
-              patient_id: insertedPatients[1]._id,
-              doctor_id: insertedDoctors[6]._id,
-              availability_id: insertedAvailabilities[1]._id,
+              patientId: insertedPatients[1]._id,
+              doctorId: insertedDoctors[6]._id,
+              availabilityId: insertedAvailabilities[1]._id,
             },
             {
               status: 'cancelled',
-              patient_id: insertedPatients[2]._id,
-              doctor_id: insertedDoctors[5]._id,
-              availability_id: insertedAvailabilities[2]._id,
+              patientId: insertedPatients[2]._id,
+              doctorId: insertedDoctors[5]._id,
+              availabilityId: insertedAvailabilities[2]._id,
             },
             {
               status: 'confirmed',
-              patient_id: insertedPatients[3]._id,
-              doctor_id: insertedDoctors[4]._id,
-              availability_id: insertedAvailabilities[3]._id,
+              patientId: insertedDoctors[4]._id,
+              availabilityId: insertedAvailabilities[3]._id,
             },
             {
               status: 'pending',
-              patient_id: insertedPatients[4]._id,
-              doctor_id: insertedDoctors[3]._id,
-              availability_id: insertedAvailabilities[4]._id,
+              patientId: insertedPatients[4]._id,
+              doctorId: insertedDoctors[3]._id,
+              availabilityId: insertedAvailabilities[4]._id,
             },
           ]
 
           const doctorAvailabilityData = [
             {
-                availability_id: insertedAvailabilities[0]._id,
-                doctor_id: insertedDoctors[0]._id,
+                availabilityId: insertedAvailabilities[0]._id,
+                doctorId: insertedDoctors[0]._id,
             },
             {
-                availability_id: insertedAvailabilities[1]._id,
-                doctor_id: insertedDoctors[1]._id,
+                availabilityId: insertedAvailabilities[1]._id,
+                doctorId: insertedDoctors[1]._id,
             },
             {
-                availability_id: insertedAvailabilities[2]._id,
-                doctor_id: insertedDoctors[2]._id,
+                availabilityId: insertedAvailabilities[2]._id,
+                doctorId: insertedDoctors[2]._id,
             },
             {
-                availability_id: insertedAvailabilities[3]._id,
-                doctor_id: insertedDoctors[3]._id,
+                availabilityId: insertedAvailabilities[3]._id,
+                doctorId: insertedDoctors[3]._id,
             },
             {
-                availability_id: insertedAvailabilities[4]._id,
-                doctor_id: insertedDoctors[4]._id,
+                availabilityId: insertedAvailabilities[4]._id,
+                doctorId: insertedDoctors[4]._id,
             },
           ]
 
         // Insert bookingData
-        await BookingsModel.insertMany(bookingsData)
-        await DoctorAvailabilitiesModel.insertMany(doctorAvailabilityData)
+        await Booking.insertMany(bookingsData)
+        await DoctorAvailability.insertMany(doctorAvailabilityData)
         console.log('Bookings seeded successfully')
 
         // Close the connection
