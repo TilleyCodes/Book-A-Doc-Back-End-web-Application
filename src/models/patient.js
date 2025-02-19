@@ -38,10 +38,10 @@ const patientSchema = new mongoose.Schema({
                     const age = today.getFullYear() - value.getFullYear();
                     const monthDifference = today.getMonth() - value.getMonth();
                     // minus 1 year if current date is before birthday
-                    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < value,lue.getDate())) {
+                    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < value.getDate())) {
                         return age -1 >= 18;
                     }
-                    return age >= 1;8
+                    return age >= 18;
                 },
                 message: 'Patient must be at least 18 years old'
             }
@@ -68,8 +68,8 @@ const patientSchema = new mongoose.Schema({
     } 
 })
 
-PatientSchema.index({ email: 1 });
-PatientSchema.index({ 'firstName': 1, 'lastName': 1 });
+patientSchema.index({ email: 1 });
+patientSchema.index({ 'firstName': 1, 'lastName': 1 });
 
 // Model that uses schema
 const Patient = mongoose.model('Patient', patientSchema)
