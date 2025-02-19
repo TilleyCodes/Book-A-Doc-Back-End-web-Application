@@ -1,0 +1,19 @@
+const express = require('express');
+
+const {
+  createMedicalCentre,
+  getAllMedicalCentres,
+  getMedicalCentreById,
+  updateMedicalCentre,
+  deleteMedicalCentre,
+} = require('../controllers/medicalCentreController');
+
+const router = express.Router();
+
+router.post('/', createMedicalCentre);
+router.get('/', getAllMedicalCentres);
+router.get('/:id', getMedicalCentreById);
+router.put('/:id', updateMedicalCentre);
+router.delete('/:id', deleteMedicalCentre);
+
+module.exports = router;
