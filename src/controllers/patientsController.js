@@ -7,7 +7,10 @@ async function getPatients() {
 }
 
 // GET ONE data from PatientsModel db
-
+async function getPatient(patientId) {
+    const patient = await PatientsModel.findById(patientId)
+    return patient
+}
 
 // CREATE data from PatientsModel db
 
@@ -20,4 +23,5 @@ async function getPatients() {
 
 module.exports = {
     getPatients,
+    getPatient,
 }
