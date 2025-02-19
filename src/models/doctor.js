@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { specialtyModel } = require('./specialtyModel')
+const { specialtyModel } = require('./specialty')
 
 const doctorSchema = new mongoose.Schema({
     doctorName: {
