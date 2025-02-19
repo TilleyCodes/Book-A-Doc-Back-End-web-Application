@@ -7,7 +7,7 @@ async function fetchBookings() {
 
         const bookings = await Booking.find({})
             .populate('patientId', 'firstName lastName')
-            .populate('doctorId, doctorName')
+            .populate('doctorId', 'doctorName')
             .populate('availabilityId', 'date startTime endTime isBooked')
         console.log('Current Bookings:', bookings)
 

@@ -68,7 +68,6 @@ const patientSchema = new mongoose.Schema({
     } 
 })
 
-patientSchema.index({ email: 1 });
 patientSchema.index({ 'firstName': 1, 'lastName': 1 });
 
 // Model that uses schema

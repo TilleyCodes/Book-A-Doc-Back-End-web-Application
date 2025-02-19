@@ -6,7 +6,7 @@ async function fetchDoctors() {
         await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db')
 
         const doctors = await Doctor.find({})
-            .populate('specialtyId, specialtyName')
+            .populate('specialtyId', 'specialtyName')
         console.log('Doctors:', doctors)
 
         await mongoose.connection.close()

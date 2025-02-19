@@ -6,7 +6,7 @@ async function fetchDoctorAvailabilities() {
         await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db')
 
         const doctorAvailabilities = await DoctorAvailability.find({})
-            .populate('doctorId, doctorName')
+            .populate('doctorId', 'doctorName')
             .populate('availabilityId', 'date startTime endTime isBooked')
         console.log('Current Doctor Availabilities:', doctorAvailabilities)
 

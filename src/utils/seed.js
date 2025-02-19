@@ -19,7 +19,7 @@ const patientsData = [
             street: '123 Main St', 
             city: 'Anytown'
         },
-        phone_number: '0400 928 882',
+        phoneNumber: '0400 928 882',
         password: 'password123'
     },
     {
@@ -31,7 +31,7 @@ const patientsData = [
             street: '456 Elm St', 
             city: 'Othertown'
         },
-        phone_number: '0433 393 203',
+        phoneNumber: '0433 393 203',
         password: 'password456'
     },
     {
@@ -43,7 +43,7 @@ const patientsData = [
             street: '789 George St',
             city: 'Sydney'
         },
-        phone_number: '0412 345 678',
+        phoneNumber: '0412 345 678',
         password: 'emilyj1234'
     },
     {
@@ -55,7 +55,7 @@ const patientsData = [
             street: '456 Collins St', 
             city: 'Melbourne'
         },
-        phone_number: '0401 234 567',
+        phoneNumber: '0401 234 567',
         password: 'liambrown456'
     },
     {
@@ -67,7 +67,7 @@ const patientsData = [
             street: '123 Queen St', 
             city: 'Brisbane'
         },
-        phone_number: '0423 456 789',
+        phoneNumber: '0423 456 789',
         password: 'olivia78910'
     }
 ]
@@ -238,7 +238,7 @@ async function seedDatabase() {
         const doctorsData = [
             {
                 doctorName: 'Pepe Poo',
-                specialty_id: insertedSpecialties[0]._id,
+                specialtyId: insertedSpecialties[0]._id,
             },
             {
                 doctorName: 'Bandit Boy',
@@ -276,31 +276,31 @@ async function seedDatabase() {
                 medicalCentreId: insertedMedicalCentres[0]._id,
             },
             {
-                doctor_id: insertedDoctors[1]._id,
+                doctorId: insertedDoctors[1]._id,
                 medicalCentreId: insertedMedicalCentres[1]._id,
             },
             {
-                doctor_id: insertedDoctors[2]._id,
+                doctorId: insertedDoctors[2]._id,
                 medicalCentreId: insertedMedicalCentres[2]._id,
             },
             {
-                doctor_id: insertedDoctors[3]._id,
+                doctorId: insertedDoctors[3]._id,
                 medicalCentreId: insertedMedicalCentres[3]._id,
             },
             {
-                doctor_id: insertedDoctors[4]._id,
+                doctorId: insertedDoctors[4]._id,
                 medicalCentreId: insertedMedicalCentres[14]._id,
             },
             {
-                doctor_id: insertedDoctors[5]._id,
+                doctorId: insertedDoctors[5]._id,
                 medicalCentreId: insertedMedicalCentres[5]._id,
             },
             {
-                doctor_id: insertedDoctors[6]._id,
+                doctorId: insertedDoctors[6]._id,
                 medicalCentreId: insertedMedicalCentres[1]._id,
             },
             {
-                doctor_id: insertedDoctors[7]._id,
+                doctorId: insertedDoctors[7]._id,
                 medicalCentreId: insertedMedicalCentres[2]._id
             }
         ]
