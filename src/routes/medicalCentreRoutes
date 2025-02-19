@@ -1,19 +1,80 @@
-const express = require('express');
-
+const express = require("express");
 const {
-  createMedicalCentre,
-  getAllMedicalCentres,
-  getMedicalCentreById,
-  updateMedicalCentre,
-  deleteMedicalCentre,
-} = require('../controllers/medicalCentreController');
+    getMedicalCentres,
+    getMedicalCentre,
+    createMedicalCentre,
+    updateMedicalCentre,
+    deleteMedicalCentre
+} = require("../controllers/medicalCentreController");
 
-const router = express.Router();
+const medicalCentreRouter = express.Router();
 
-router.post('/', createMedicalCentre);
-router.get('/', getAllMedicalCentres);
-router.get('/:id', getMedicalCentreById);
-router.put('/:id', updateMedicalCentre);
-router.delete('/:id', deleteMedicalCentre);
+// GET all medical centres - /medical-centres
+medicalCentreRouter.get("/", async (req, res) => {
+    const medicalCentres = await getMedicalCentres();
+    res.json(medicalCentres);
+});
 
-module.exports = router;
+// GET a single medical centre - /medical-centres/id
+medicalCentreRouter.get("/:medicalCentreId", async (req, res) => {
+    const medicalCentre = await getMedicalCentre(req.params.medicalCentreId);
+    if (medicalCentre) {
+        res.json(medicalCentre);
+    } else {
+        res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+    }
+});
+
+// POST new medical centre - /medical-centres
+medicalCentreRouter.post("/", async (req, res) => {
+    const bodyData = {
+        medicalCentreName: req.body.medicalCentreName,
+        operatingHours: req.body.operatingHours,
+        address: {
+            street: req.body.address.street,
+            city: req.body.address.city
+        },
+        contacts: {
+            email: req.body.contacts.email,
+            phone: req.body.contacts.phone
+        }
+    };
+    const newMedicalCentre = await createMedicalCentre(bodyData);
+    res.status(201).json(newMedicalCentre);
+});
+
+// PATCH update medical centre - /medical-centres/id
+medicalCentreRouter.patch("/:medicalCentreId", async (req, res) => {
+    const bodyData = {
+        medicalCentreName: req.body.medicalCentreName,
+        operatingHours: req.body.operatingHours,
+        address: {
+            street: req.body.address.street,
+            city: req.body.address.city
+        },
+        contacts: {
+            email: req.body.contacts.email,
+            phone: req.body.contacts.phone
+        }
+    };
+    const updatedMedicalCentre = await updateMedicalCentre(req.params.medicalCentreId, bodyData);
+    if (!updatedMedicalCentre) {
+        res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+    } else if (updatedMedicalCentre.error) {
+        res.status(403).json(updatedMedicalCentre)
+    } else {
+        res.json(updatedMedicalCentre);
+    }
+});
+
+// DELETE medical centre - /medical-centres/id
+medicalCentreRouter.delete("/:medicalCentreId", async (req, res) => {
+    const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
+    if (deletedMedicalCentre) {
+        res.json(deletedMedicalCentre);
+    } else {
+        res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+    }
+});
+
+module.exports = medicalCentreRouter;

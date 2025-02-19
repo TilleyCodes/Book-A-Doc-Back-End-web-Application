@@ -1,1 +1,30 @@
 const MedicalCentre = require('../models/medicalCentre');
+
+// Get all medical centres
+const getMedicalCentres = async () => {
+    try {
+        return await MedicalCentre.find({});
+    } catch (error) {
+        console.error('Error getting medical centres:', error);
+        throw error;
+    }
+};
+
+// Get single medical centre
+// Create new medical centre
+// Update medical centre
+
+// Delete medical centre
+const deleteMedicalCentre = async (id) => {
+    try {
+        return await MedicalCentre.findByIdAndDelete(id);
+    } catch (error) {
+        console.error('Error deleting medical centre:', error);
+        throw error;
+    }
+};
+
+module.exports = {
+    getMedicalCentres,
+    deleteMedicalCentre
+};
