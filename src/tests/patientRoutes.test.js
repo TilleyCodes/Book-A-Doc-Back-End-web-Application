@@ -61,6 +61,8 @@ let goodSamplePatientData = [
   }
 ]
 
+let badSamplePatientData = []
+
 describe('Patients route golden path', () => {
   test('GET ALL | should return a patient with _id length of 24', async () => {
 
@@ -91,6 +93,15 @@ describe('Patients route golden path', () => {
     expect(response.status).toBe(200)
     expect(response.body).toHaveLength(1)
     expect(response.body[0].firstName).toBe('Jane')
+  })
+
+  // Check for empty result
+  test('GET | Should return an empty array with a 200 status', async () => {
+    let emptyArray = []
+    Patient.find = jest.fn().mockResolvedValue(emptyArray)
+    const response = await request(app).get('/patients')
+    expect(response.status).toBe(200)
+    expect(response.body).toEqual([])
   })
 
 })

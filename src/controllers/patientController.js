@@ -19,13 +19,25 @@ async function createPatient(data) {
 }
 
 // UPDATE data from PatientsModel db
-
+async function updatePatient(patientId, data, options = {}) {
+    const updatedPatient = await Patient.findByIdAndUpdate(patientId, 
+        { $set: data}, // Allows partial update
+        options
+    )
+    return updatedPatient
+}
 
 // DELETE data from PatientsModel db
+async function deletePatient(patientId) {
+    const deletedPatient = await Patient.findByIdAndDelete(patientId)
+    return deletedPatient
+}
 
 
 module.exports = {
     getPatients,
     getPatient,
     createPatient,
+    updatePatient,
+    deletePatient
 }
