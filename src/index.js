@@ -2,11 +2,7 @@ const express = require("express")
 const mongoose = require("mongoose")
 const PORT = process.env.PORT || 3000
 const PatientRouter = require('./routes/patientRoutes')
-<<<<<<< HEAD
-const MedicalRouter = require('./routes/medicalCentreRoutes')
 const medicalCentreRouter = require("./routes/medicalCentreRoutes")
-=======
->>>>>>> ceac2c99995f1fdae635165f3501f16b888a65a6
 
 const app = express()
 
