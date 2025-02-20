@@ -12,9 +12,6 @@ const specialtySchema = new mongoose.Schema({
     }
 });
 
-// Add index for faster queries
-specialtySchema.index({ 'specialtyName': 1 });
-
 const Specialty = mongoose.model('Specialty', specialtySchema);
 
 module.exports = { Specialty };

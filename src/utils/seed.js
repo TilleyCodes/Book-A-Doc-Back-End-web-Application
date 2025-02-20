@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const Patient = require('../models/patient')
-const Availability = require('../models/availability')
-const MedicalCentre = require('../models/medicalCentre')
-const Specialty = require('../models/specialty')
-const Doctor = require('../models/doctor')
-const DoctorCentre = require('../models/doctorCentre')
-const Booking = require('../models/booking')
-const DoctorAvailability = require('../models/doctorAvailability')
+const { Patient } = require('../models/patient')
+const {Availability} = require('../models/availability')
+const {MedicalCentre} = require('../models/medicalCentre')
+const {Specialty} = require('../models/specialty')
+const {Doctor} = require('../models/doctor')
+const {DoctorCentre} = require('../models/doctorCentre')
+const {Booking} = require('../models/booking')
+const {DoctorAvailability} = require('../models/doctorAvailability')
 
 // Sample data to be seeded
 const patientsData = [
@@ -208,8 +208,6 @@ const specialtiesData = [
     }
 ];
 
-const bookingsData = []
-
 // Function to connect to DB and seed data
 async function seedDatabase() {
     try {
@@ -232,7 +230,6 @@ async function seedDatabase() {
         const insertedAvailabilities = await Availability.insertMany(availabilitiesData)
         const insertedMedicalCentres = await MedicalCentre.insertMany(medicalCentresData)
         const insertedSpecialties = await Specialty.insertMany(specialtiesData)
-        const insertedDoctors = await Doctor.insertMany(doctorsData)
         console.log('Primary data seeded successfully')
 
         const doctorsData = [
@@ -270,6 +267,9 @@ async function seedDatabase() {
             },
         ]
 
+        // Populate insertedDoctors
+        const insertedDoctors = await Doctor.insertMany(doctorsData)
+
         const doctorCentresData = [
             {
                 doctorId: insertedDoctors[0]._id,
@@ -289,7 +289,7 @@ async function seedDatabase() {
             },
             {
                 doctorId: insertedDoctors[4]._id,
-                medicalCentreId: insertedMedicalCentres[14]._id,
+                medicalCentreId: insertedMedicalCentres[1]._id,
             },
             {
                 doctorId: insertedDoctors[5]._id,
@@ -301,13 +301,13 @@ async function seedDatabase() {
             },
             {
                 doctorId: insertedDoctors[7]._id,
-                medicalCentreId: insertedMedicalCentres[2]._id
+                medicalCentreId: insertedMedicalCentres[2]._id,
             }
         ]
 
         const bookingsData = [
             {
-              status: 'pending',
+              status: 'confirmed',
               patientId: insertedPatients[0]._id,
               doctorId: insertedDoctors[7]._id, 
               availabilityId: insertedAvailabilities[0]._id,
@@ -330,14 +330,14 @@ async function seedDatabase() {
               availabilityId: insertedAvailabilities[3]._id,
             },
             {
-              status: 'pending',
+              status: 'confirmed',
               patientId: insertedPatients[4]._id,
               doctorId: insertedDoctors[3]._id,
               availabilityId: insertedAvailabilities[4]._id,
             },
-          ]
+        ]
 
-          const doctorAvailabilityData = [
+        const doctorAvailabilityData = [
             {
                 availabilityId: insertedAvailabilities[0]._id,
                 doctorId: insertedDoctors[0]._id,
@@ -358,12 +358,14 @@ async function seedDatabase() {
                 availabilityId: insertedAvailabilities[4]._id,
                 doctorId: insertedDoctors[4]._id,
             },
-          ]
+        ]
 
         // Insert bookingData
+        await Doctor.insertMany(doctorsData)
+        await DoctorCentre.insertMany(doctorCentresData)
         await Booking.insertMany(bookingsData)
         await DoctorAvailability.insertMany(doctorAvailabilityData)
-        console.log('Bookings seeded successfully')
+        console.log('Database seeded successfully')
 
         // Close the connection
         await mongoose.connection.close()
