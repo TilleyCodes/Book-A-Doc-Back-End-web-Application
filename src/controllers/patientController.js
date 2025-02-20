@@ -1,4 +1,4 @@
-const Patient = require("../models/patient");
+const {Patient} = require('../models/patient')
 
 // GET ALL data from PatientsModel db
 async function getPatients() {
@@ -13,7 +13,10 @@ async function getPatient(patientId) {
 }
 
 // CREATE data from PatientsModel db
-
+async function createPatient(data) {
+    const newPatient = await Patient.create(data)
+    return newPatient
+}
 
 // UPDATE data from PatientsModel db
 
@@ -24,4 +27,5 @@ async function getPatient(patientId) {
 module.exports = {
     getPatients,
     getPatient,
+    createPatient,
 }
