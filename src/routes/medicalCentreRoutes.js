@@ -9,13 +9,13 @@ const {
 
 const medicalCentreRouter = express.Router();
 
-// GET all medical centres - /medical-centres
+// GET all medical centres - http://localhost:3000/medicalCentres
 medicalCentreRouter.get("/", async (req, res) => {
     const medicalCentres = await getMedicalCentres();
     res.json(medicalCentres);
 });
 
-// GET a single medical centre - /medical-centres/id
+// GET a single medical centre - http://localhost:3000/medicalCentres/_id
 medicalCentreRouter.get("/:medicalCentreId", async (req, res) => {
     const medicalCentre = await getMedicalCentre(req.params.medicalCentreId);
     if (medicalCentre) {
@@ -25,7 +25,7 @@ medicalCentreRouter.get("/:medicalCentreId", async (req, res) => {
     }
 });
 
-// POST new medical centre - /medical-centres
+// POST new medical centre - http://localhost:3000/medicalCentres
 medicalCentreRouter.post("/", async (req, res) => {
     const bodyData = {
         medicalCentreName: req.body.medicalCentreName,
@@ -43,7 +43,7 @@ medicalCentreRouter.post("/", async (req, res) => {
     res.status(201).json(newMedicalCentre);
 });
 
-// PATCH update medical centre - /medical-centres/id
+// PATCH update medical centre - http://localhost:3000/medicalCentres/_id
 medicalCentreRouter.patch("/:medicalCentreId", async (req, res) => {
     const bodyData = {
         medicalCentreName: req.body.medicalCentreName,
@@ -67,7 +67,7 @@ medicalCentreRouter.patch("/:medicalCentreId", async (req, res) => {
     }
 });
 
-// DELETE medical centre - /medical-centres/id
+// DELETE medical centre - http://localhost:3000/medicalCentres/_id
 medicalCentreRouter.delete("/:medicalCentreId", async (req, res) => {
     const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
     if (deletedMedicalCentre) {
