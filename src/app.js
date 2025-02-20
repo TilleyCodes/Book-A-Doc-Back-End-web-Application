@@ -1,6 +1,6 @@
 // app file for testing purposes only
 const express = require('express')
-const {Patient} = require('./models/patient')
+const Patient = require('./models/patient')
 const app = express()
 
 app.use(express.json())
