@@ -13,8 +13,12 @@ const {
 PatientRouter.get(
     '/',
     async (request, response) => {
-        const patients = await getPatients()
-        response.status(200).json(patients)
+        try {
+            const patients = await getPatients()
+            response.status(200).json(patients)
+        } catch (error) {
+            response.status(500).json({error: error.message})
+        }
     }
 )
 
