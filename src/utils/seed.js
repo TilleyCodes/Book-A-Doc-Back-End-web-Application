@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const { Patient } = require('../models/patient')
-const {Availability} = require('../models/availability')
-const {MedicalCentre} = require('../models/medicalCentre')
-const {Specialty} = require('../models/specialty')
-const {Doctor} = require('../models/doctor')
-const {DoctorCentre} = require('../models/doctorCentre')
-const {Booking} = require('../models/booking')
-const {DoctorAvailability} = require('../models/doctorAvailability')
+const Patient = require('../models/patient')
+const Availability = require('../models/availability')
+const MedicalCentre = require('../models/medicalCentre')
+const Specialty = require('../models/specialty')
+const Doctor = require('../models/doctor')
+const DoctorCentre = require('../models/doctorCentre')
+const Booking = require('../models/booking')
+const DoctorAvailability = require('../models/doctorAvailability')
 
 // Sample data to be seeded
 const patientsData = [

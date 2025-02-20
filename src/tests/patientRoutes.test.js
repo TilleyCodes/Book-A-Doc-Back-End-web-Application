@@ -1,6 +1,6 @@
 const request = require('supertest')
 const app = require('../app')
-const { Patient } = require('../models/patient')
+const Patient = require('../models/patient')
 
 let goodSamplePatientData = [
   {

@@ -13,4 +13,4 @@ const doctorCentreSchema = new mongoose.Schema({
 
 const DoctorCentre = mongoose.model('DoctorCentre', doctorCentreSchema);
 
-module.exports = { DoctorCentre };
+module.exports = DoctorCentre;

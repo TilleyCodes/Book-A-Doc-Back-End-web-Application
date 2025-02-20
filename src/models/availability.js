@@ -12,4 +12,4 @@ const availabilitySchema = new mongoose.Schema({
 const Availability = mongoose.model('Availability', availabilitySchema)
 
 // Export model
-module.exports = { Availability }
+module.exports = Availability;

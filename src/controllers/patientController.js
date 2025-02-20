@@ -1,4 +1,4 @@
-const {Patient} = require('../models/patient')
+const Patient = require('../models/patient')
 
 // GET ALL data from PatientsModel db
 async function getPatients() {

@@ -83,6 +83,4 @@ PatientRouter.delete(
     }
 )
 
-module.exports = {
-    PatientRouter
-}
+module.exports = PatientRouter

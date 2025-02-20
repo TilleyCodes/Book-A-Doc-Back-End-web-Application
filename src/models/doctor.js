@@ -16,4 +16,4 @@ doctorSchema.index({ 'doctorName': 1 });
 
 const Doctor = mongoose.model('Doctor', doctorSchema);
 
-module.exports = { Doctor };
+module.exports = Doctor;

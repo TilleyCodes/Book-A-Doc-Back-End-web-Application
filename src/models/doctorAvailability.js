@@ -16,4 +16,4 @@ const doctorAvailabilitySchema = new mongoose.Schema({
 const DoctorAvailability = mongoose.model('DoctorAvailability', doctorAvailabilitySchema)
 
 // Export model
-module.exports = { DoctorAvailability }
+module.exports = DoctorAvailability;

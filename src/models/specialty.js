@@ -14,4 +14,4 @@ const specialtySchema = new mongoose.Schema({
 
 const Specialty = mongoose.model('Specialty', specialtySchema);
 
-module.exports = { Specialty };
+module.exports = Specialty;

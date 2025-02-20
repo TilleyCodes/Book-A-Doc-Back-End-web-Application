@@ -44,4 +44,4 @@ const medicalCentreSchema = new mongoose.Schema({
 const MedicalCentre = mongoose.model('MedicalCentre', medicalCentreSchema)
 
 // Export model
-module.exports = { MedicalCentre };
+module.exports = MedicalCentre;
