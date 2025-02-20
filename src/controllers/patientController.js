@@ -7,8 +7,8 @@ async function getPatients() {
 }
 
 // GET ONE data from PatientsModel db
-async function getPatient(patientId) {
-  const patient = await Patient.findById(patientId);
+async function getPatient(id) {
+  const patient = await Patient.findById(id);
   return patient;
 }
 
@@ -19,9 +19,9 @@ async function createPatient(data) {
 }
 
 // UPDATE data from PatientsModel db
-async function updatePatient(patientId, data, options = {}) {
+async function updatePatient(id, data, options = {}) {
   const updatedPatient = await Patient.findByIdAndUpdate(
-    patientId,
+    id,
     { $set: data }, // Allows partial update
     options,
   );
@@ -29,8 +29,8 @@ async function updatePatient(patientId, data, options = {}) {
 }
 
 // DELETE data from PatientsModel db
-async function deletePatient(patientId) {
-  const deletedPatient = await Patient.findByIdAndDelete(patientId);
+async function deletePatient(id) {
+  const deletedPatient = await Patient.findByIdAndDelete(id);
   return deletedPatient;
 }
 

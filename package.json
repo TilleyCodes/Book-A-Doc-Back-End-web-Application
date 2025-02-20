@@ -9,7 +9,7 @@
     "wipe": "node src/utils/wipe.js",
     "test": "jest --watch",
     "fetchP": "node src/utils/fetchPatient.js",
-    "fetchA": "node src/utils/fetchAvailabilities.js",
+    "fetchA": "node src/utils/fetchAvailability.js",
     "fetchMC": "node src/utils/fetchMedicalCentres.js",
     "fetchB": "node src/utils/fetchBookings.js",
     "fetchDA": "node src/utils/fetchDoctorAvailabilities.js"

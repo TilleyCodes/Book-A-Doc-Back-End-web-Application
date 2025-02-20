@@ -1,6 +1,6 @@
 const express = require('express');
 
-const PatientRouter = express.Router();
+const patientRouter = express.Router();
 
 const {
   getPatients,
@@ -11,79 +11,79 @@ const {
 } = require('../controllers/patientController');
 
 // GET ALL | http://localhost:3000/patients
-PatientRouter.get(
+patientRouter.get(
   '/',
-  async (request, response) => {
+  async (req, res) => {
     try {
       const patients = await getPatients();
-      response.status(200).json(patients);
+      res.status(200).json(patients);
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   },
 );
 
 // GET ONE | http://localhost:3000/patients/patientId
-PatientRouter.get(
+patientRouter.get(
   '/:patientId',
-  async (request, response) => {
-    const patient = await getPatient(request.params.patientId);
+  async (req, res) => {
+    const patient = await getPatient(req.params.patientId);
     if (patient) {
-      response.status(200).json(patient);
+      res.status(200).json(patient);
     } else {
-      response.status(404).json({ error: `Patient with id: ${request.params.patientId} does not exist` });
+      res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
     }
   },
 );
 
 // CREATE | http://localhost:3000/patients
-PatientRouter.post(
+patientRouter.post(
   '/',
-  async (request, response) => {
+  async (req, res) => {
     try {
-      const newPatient = await createPatient(request.body);
-      response.status(201).json(newPatient);
+      const newPatient = await createPatient(req.body);
+      res.status(201).json(newPatient);
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   },
 );
 
 // UPDATE | http://localhost:3000/patients/patient_id
-PatientRouter.patch(
+patientRouter.patch(
   '/:patientId',
-  async (request, response) => {
+  async (req, res) => {
     try {
-      const { patientId } = request.params;
-      const updatedPatient = await updatePatient(patientId, request.body, {
+      const { patientId } = req.params;
+      const updatedPatient = await updatePatient(patientId, req.body, {
         new: true,
         runValidators: true,
       });
       if (!updatedPatient) {
-        response.status(404).json({ error: `Patient with id: ${request.params.patientId} does not exist` });
+        res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
       }
-      response.status(200).json(updatedPatient);
+      res.status(200).json(updatedPatient);
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   },
 );
 
 // DELETE | http://localhost:3000/patients/patient_id
-PatientRouter.delete(
+patientRouter.delete(
   '/:patientId',
-  async (request, response) => {
+  async (req, res) => {
     try {
-      const deletedPatient = await deletePatient(request.params.patientId);
+      const deletedPatient = await deletePatient(req.params.patientId);
 
       if (!deletedPatient) {
-        response.status(404).json({ error: `Patient with id: ${request.params.patientId} does not exist` });
+        res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
       }
-      response.status(200).json(deletedPatient);
+      res.status(200).json(deletedPatient);
     } catch (error) {
-      response.status(500).json({ error: error.message });
+      res.status(500).json({ error: error.message });
     }
   },
 );
 
-module.exports = PatientRouter;
+module.exports = patientRouter;
