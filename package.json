@@ -8,7 +8,7 @@
     "seed": "node src/utils/seed.js",
     "wipe": "node src/utils/wipe.js",
     "test": "jest --watch",
-    "fetchP": "node src/utils/fetchPatients.js",
+    "fetchP": "node src/utils/fetchPatient.js",
     "fetchA": "node src/utils/fetchAvailabilities.js",
     "fetchMC": "node src/utils/fetchMedicalCentres.js",
     "fetchB": "node src/utils/fetchBookings.js",
