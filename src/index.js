@@ -2,7 +2,9 @@ const express = require("express")
 const mongoose = require("mongoose")
 const PORT = process.env.PORT || 3000
 const PatientRouter = require('./routes/patientRoutes')
-const medicalCentreRouter = require("./routes/medicalCentreRoutes")
+const medicalCentreRouter = require('./routes/medicalCentreRoutes')
+const specialtyRouter = require('./routes/specialtyRoutes')
+const doctorRouter = require('./routes/doctorRoutes')
 
 const app = express()
 
@@ -17,6 +19,8 @@ app.get('/', (request, response) => {
 
 app.use('/patients', PatientRouter)
 app.use('/medicalCentres', medicalCentreRouter)
+app.use('/specialties', specialtyRouter)
+app.use('/doctors', doctorRouter)
 
 // ERROR HANDLING
 // Wildcard * means "match any route"
