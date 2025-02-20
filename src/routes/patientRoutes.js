@@ -69,7 +69,7 @@ PatientRouter.patch(
     }
 )
 
-// DELETE | http://ocalhost:3000/patients/patient_id
+// DELETE | http://localhost:3000/patients/patient_id
 PatientRouter.delete(
     '/:patientId',
     async (request, response) => {

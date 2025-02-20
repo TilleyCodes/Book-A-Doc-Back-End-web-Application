@@ -1,4 +1,5 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const hashPassword = require('../middleware/hashPassword');
 
 // Schema with data properties
 const patientSchema = new mongoose.Schema({
@@ -69,6 +70,9 @@ const patientSchema = new mongoose.Schema({
 })
 
 patientSchema.index({ 'firstName': 1, 'lastName': 1 });
+
+// hashPassword middleware
+patientSchema.plugin(hashPassword, { saltRounds: 12 })
 
 // Model that uses schema
 const Patient = mongoose.model('Patient', patientSchema)
