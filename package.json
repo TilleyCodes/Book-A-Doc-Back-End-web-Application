@@ -8,9 +8,13 @@
     "seed": "node src/utils/seed.js",
     "wipe": "node src/utils/wipe.js",
     "test": "jest --watch",
+    "lint": "eslint .",
     "fetchP": "node src/utils/fetchPatient.js",
     "fetchA": "node src/utils/fetchAvailability.js",
     "fetchMC": "node src/utils/fetchMedicalCentres.js",
+    "fetchS": "node src/ultis/fetchSpecialty.js",
+    "fetchD": "node src/ultis/fetchDoctor.js",
+    "fetchDC": "node src/ultis/fetchDoctorCentre.js",
     "fetchB": "node src/utils/fetchBookings.js",
     "fetchDA": "node src/utils/fetchDoctorAvailabilities.js"
   },
@@ -25,7 +29,8 @@
     "express": "^4.21.2",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.10.1"
+    "mongoose": "^8.10.1",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",

@@ -29,15 +29,7 @@ doctorRouter.get("/:doctorId", async (req, res) => {
 doctorRouter.post("/", async (req, res) => {
     const bodyData = {
         doctorName: req.body.doctorName,
-        operatingHours: req.body.operatingHours,
-        address: {
-            street: req.body.address.street,
-            city: req.body.address.city
-        },
-        contacts: {
-            email: req.body.contacts.email,
-            phone: req.body.contacts.phone
-        }
+        specialtyId: req.body.specialtyId,
     };
     const newDoctor = await createDoctor(bodyData);
     res.status(201).json(newDoctor);
@@ -47,15 +39,7 @@ doctorRouter.post("/", async (req, res) => {
 doctorRouter.patch("/:doctorId", async (req, res) => {
     const bodyData = {
         doctorName: req.body.doctorName,
-        operatingHours: req.body.operatingHours,
-        address: {
-            street: req.body.address.street,
-            city: req.body.address.city
-        },
-        contacts: {
-            email: req.body.contacts.email,
-            phone: req.body.contacts.phone
-        }
+        specialtyId: req.body.specialtyId,
     };
     const updatedDoctor = await updateDoctor(req.params.DoctorId, bodyData);
     if (!updatedDoctor) {

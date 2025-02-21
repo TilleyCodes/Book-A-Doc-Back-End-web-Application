@@ -29,15 +29,7 @@ specialtyRouter.get("/:specialtyId", async (req, res) => {
 specialtyRouter.post("/", async (req, res) => {
     const bodyData = {
         specialtyName: req.body.specialtyName,
-        operatingHours: req.body.operatingHours,
-        address: {
-            street: req.body.address.street,
-            city: req.body.address.city
-        },
-        contacts: {
-            email: req.body.contacts.email,
-            phone: req.body.contacts.phone
-        }
+        description: req.body.description,
     };
     const newSpecialty = await createSpecialty(bodyData);
     res.status(201).json(newSpecialty);
@@ -46,16 +38,8 @@ specialtyRouter.post("/", async (req, res) => {
 // PATCH update specialty - http://localhost:3000/specialties/_id
 specialtyRouter.patch("/:specialtyId", async (req, res) => {
     const bodyData = {
-        specialtyName: req.body.specialtyName,
-        operatingHours: req.body.operatingHours,
-        address: {
-            street: req.body.address.street,
-            city: req.body.address.city
-        },
-        contacts: {
-            email: req.body.contacts.email,
-            phone: req.body.contacts.phone
-        }
+        specialtyName: body.specialtyName,
+        description: body.description,
     };
     const updatedSpecialty = await updateSpecialty(req.params.SpecialtyId, bodyData);
     if (!updatedSpecialty) {
