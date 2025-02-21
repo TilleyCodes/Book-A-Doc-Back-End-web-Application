@@ -8,6 +8,7 @@
     "extends": ["airbnb-base"],
     "rules": {
       // Override rules here if required
+      "eslint-disable-next-line": "no-underscore-dangle"
     }
   }
   

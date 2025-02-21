@@ -12,7 +12,7 @@
     "fetchA": "node src/utils/fetchAvailability.js",
     "fetchMC": "node src/utils/fetchMedicalCentres.js",
     "fetchB": "node src/utils/fetchBookings.js",
-    "fetchDA": "node src/utils/fetchDoctorAvailabilities.js"
+    "fetchDA": "node src/utils/fetchDoctorAvailability.js"
   },
   "keywords": [],
   "author": "",

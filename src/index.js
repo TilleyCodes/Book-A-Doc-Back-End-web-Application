@@ -9,6 +9,7 @@ const specialtyRouter = require('./routes/specialtyRoutes');
 const doctorRouter = require('./routes/doctorRoutes');
 const availabilityRouter = require('./routes/availabilityRoute');
 const bookingRouter = require('./routes/bookingRoute');
+const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoute');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.get('/', (request, response) => {
 app.use('/patients', patientRouter);
 app.use('/availability', availabilityRouter);
 app.use('/bookings', bookingRouter);
+app.use('/doctor_availability', doctorAvailabilityRouter);
 app.use('/medicalCentres', medicalCentreRouter);
 app.use('/specialties', specialtyRouter);
 app.use('/doctors', doctorRouter);
