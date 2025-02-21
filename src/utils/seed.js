@@ -236,35 +236,35 @@ async function seedDatabase() {
     const doctorsData = [
       {
         doctorName: 'Pepe Poo',
-        specialtyId: insertedSpecialties[0]._id,
+        specialtyId: insertedSpecialties[0].id,
       },
       {
         doctorName: 'Bandit Boy',
-        specialtyId: insertedSpecialties[1]._id,
+        specialtyId: insertedSpecialties[1].id,
       },
       {
         doctorName: 'Yogi Bear',
-        specialtyId: insertedSpecialties[2]._id,
+        specialtyId: insertedSpecialties[2].id,
       },
       {
         doctorName: 'Mia Moo',
-        specialtyId: insertedSpecialties[3]._id,
+        specialtyId: insertedSpecialties[3].id,
       },
       {
         doctorName: 'Ella Bell',
-        specialtyId: insertedSpecialties[4]._id,
+        specialtyId: insertedSpecialties[4].id,
       },
       {
         doctorName: 'Frank Fudge',
-        specialtyId: insertedSpecialties[5]._id,
+        specialtyId: insertedSpecialties[5].id,
       },
       {
         doctorName: 'Coco Nut',
-        specialtyId: insertedSpecialties[2]._id,
+        specialtyId: insertedSpecialties[2].id,
       },
       {
         doctorName: 'Snowy Ball',
-        specialtyId: insertedSpecialties[4]._id,
+        specialtyId: insertedSpecialties[4].id,
       },
     ];
 
@@ -273,91 +273,91 @@ async function seedDatabase() {
 
     const doctorCentresData = [
       {
-        doctorId: insertedDoctors[0]._id,
-        medicalCentreId: insertedMedicalCentres[0]._id,
+        doctorId: insertedDoctors[0].id,
+        medicalCentreId: insertedMedicalCentres[0].id,
       },
       {
-        doctorId: insertedDoctors[1]._id,
-        medicalCentreId: insertedMedicalCentres[1]._id,
+        doctorId: insertedDoctors[1].id,
+        medicalCentreId: insertedMedicalCentres[1].id,
       },
       {
-        doctorId: insertedDoctors[2]._id,
-        medicalCentreId: insertedMedicalCentres[2]._id,
+        doctorId: insertedDoctors[2].id,
+        medicalCentreId: insertedMedicalCentres[2].id,
       },
       {
-        doctorId: insertedDoctors[3]._id,
-        medicalCentreId: insertedMedicalCentres[3]._id,
+        doctorId: insertedDoctors[3].id,
+        medicalCentreId: insertedMedicalCentres[3].id,
       },
       {
-        doctorId: insertedDoctors[4]._id,
-        medicalCentreId: insertedMedicalCentres[1]._id,
+        doctorId: insertedDoctors[4].id,
+        medicalCentreId: insertedMedicalCentres[1].id,
       },
       {
-        doctorId: insertedDoctors[5]._id,
-        medicalCentreId: insertedMedicalCentres[5]._id,
+        doctorId: insertedDoctors[5].id,
+        medicalCentreId: insertedMedicalCentres[5].id,
       },
       {
-        doctorId: insertedDoctors[6]._id,
-        medicalCentreId: insertedMedicalCentres[1]._id,
+        doctorId: insertedDoctors[6].id,
+        medicalCentreId: insertedMedicalCentres[1].id,
       },
       {
-        doctorId: insertedDoctors[7]._id,
-        medicalCentreId: insertedMedicalCentres[2]._id,
+        doctorId: insertedDoctors[7].id,
+        medicalCentreId: insertedMedicalCentres[2].id,
       },
     ];
 
     const bookingsData = [
       {
         status: 'confirmed',
-        patientId: insertedPatients[0]._id,
-        doctorId: insertedDoctors[7]._id,
-        availabilityId: insertedAvailabilities[0]._id,
+        patientId: insertedPatients[0].id,
+        doctorId: insertedDoctors[7].id,
+        availabilityId: insertedAvailabilities[0].id,
       },
       {
         status: 'confirmed',
-        patientId: insertedPatients[1]._id,
-        doctorId: insertedDoctors[6]._id,
-        availabilityId: insertedAvailabilities[1]._id,
+        patientId: insertedPatients[1].id,
+        doctorId: insertedDoctors[6].id,
+        availabilityId: insertedAvailabilities[1].id,
       },
       {
         status: 'cancelled',
-        patientId: insertedPatients[2]._id,
-        doctorId: insertedDoctors[5]._id,
-        availabilityId: insertedAvailabilities[2]._id,
+        patientId: insertedPatients[2].id,
+        doctorId: insertedDoctors[5].id,
+        availabilityId: insertedAvailabilities[2].id,
       },
       {
         status: 'confirmed',
-        patientId: insertedDoctors[4]._id,
-        availabilityId: insertedAvailabilities[3]._id,
+        patientId: insertedDoctors[4].id,
+        availabilityId: insertedAvailabilities[3].id,
       },
       {
         status: 'confirmed',
-        patientId: insertedPatients[4]._id,
-        doctorId: insertedDoctors[3]._id,
-        availabilityId: insertedAvailabilities[4]._id,
+        patientId: insertedPatients[4].id,
+        doctorId: insertedDoctors[3].id,
+        availabilityId: insertedAvailabilities[4].id,
       },
     ];
 
     const doctorAvailabilityData = [
       {
-        availabilityId: insertedAvailabilities[0]._id,
-        doctorId: insertedDoctors[0]._id,
+        availabilityId: insertedAvailabilities[0].id,
+        doctorId: insertedDoctors[0].id,
       },
       {
-        availabilityId: insertedAvailabilities[1]._id,
-        doctorId: insertedDoctors[1]._id,
+        availabilityId: insertedAvailabilities[1].id,
+        doctorId: insertedDoctors[1].id,
       },
       {
-        availabilityId: insertedAvailabilities[2]._id,
-        doctorId: insertedDoctors[2]._id,
+        availabilityId: insertedAvailabilities[2].id,
+        doctorId: insertedDoctors[2].id,
       },
       {
-        availabilityId: insertedAvailabilities[3]._id,
-        doctorId: insertedDoctors[3]._id,
+        availabilityId: insertedAvailabilities[3].id,
+        doctorId: insertedDoctors[3].id,
       },
       {
-        availabilityId: insertedAvailabilities[4]._id,
-        doctorId: insertedDoctors[4]._id,
+        availabilityId: insertedAvailabilities[4].id,
+        doctorId: insertedDoctors[4].id,
       },
     ];
 
