@@ -1,58 +1,38 @@
 const Specialty = require('../models/specialty');
 
 // GET ALL specialties
-const getSpecialties = async () => {
-  try {
-    return await Specialty.find();
-  } catch (error) {
-    console.error('Error getting specialties:', error.message);
-    throw error;
-  }
-};
+async function getSpecialties() {
+  const specialty = await Specialty.find();
+  return specialty;
+}
 
 // GET ONE specialty
-const getSpecialty = async (id) => {
-  try {
-    return await Specialty.findById(id);
-  } catch (error) {
-    console.error('Error getting specialty:', error.message);
-    throw error;
-  }
-};
+async function getSpecialty(id) {
+  const specialty = await Specialty.findById(id);
+  return specialty;
+}
 
 // CREATE specialty
-const createSpecialty = async (data) => {
-  try {
-    return await Specialty.create(data);
-  } catch (error) {
-    console.error('Error creating specialty:', error.message);
-    throw error;
-  }
-};
+async function createSpecialty(data) {
+  const newSpecialty = await Specialty.create(data);
+  return newSpecialty;
+}
 
 // UPDATE specialty
-const updateSpecialty = async (id, data, options = { new: true }) => {
-  try {
-    return await Specialty.findByIdAndUpdate(
-      id,
-      { $set: data },
-      options,
-    );
-  } catch (error) {
-    console.error('Error updating specialty:', error.message);
-    throw error;
-  }
-};
+async function updateSpecialty(id, data, options = {}) {
+  const updatedSpecialty = await Specialty.findByIdAndUpdate(
+    id,
+    { $set: data },
+    options,
+  );
+  return updatedSpecialty;
+}
 
 // DELETE specialty
-const deleteSpecialty = async (id) => {
-  try {
-    return await Specialty.findByIdAndDelete(id);
-  } catch (error) {
-    console.error('Error deleting specialty:', error.message);
-    throw error;
-  }
-};
+async function deleteSpecialty(id) {
+  const deletedSpecialty = await Specialty.findByIdAndDelete(id);
+  return deletedSpecialty;
+}
 
 module.exports = {
   getSpecialties,

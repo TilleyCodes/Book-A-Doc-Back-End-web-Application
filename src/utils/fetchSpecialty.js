@@ -1,17 +1,19 @@
-const mongoose = require('mongoose')
-const Specialty = require('../models/specialty')
+const mongoose = require('mongoose');
+const Specialty = require('../models/specialty');
 
 async function fetchSpecialties() {
-    try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db')
+  try {
+    await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db');
 
-        const specialties = await Specialty.find({})
-        console.log('Specialties:', specialties)
+    const specialties = await Specialty.find({});
+    // eslint-disable-next-line no-console
+    console.log('Specialties:', specialties);
 
-        await mongoose.connection.close()
-    } catch (error) {
-        console.error('Error fetching specialties:', error)
-    }
+    await mongoose.connection.close();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching specialties:', error);
+  }
 }
 
-fetchSpecialties()
+fetchSpecialties();

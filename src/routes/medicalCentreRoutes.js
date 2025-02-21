@@ -53,15 +53,15 @@ medicalCentreRouter.patch('/:medicalCentreId', async (req, res) => {
       city: req.body.address.city,
     },
     contacts: {
-      email: body.contacts.email,
-      phone: body.contacts.phone,
-    }
+      email: req.body.contacts.email,
+      phone: req.body.contacts.phone,
+    },
   };
   const updatedMedicalCentre = await updateMedicalCentre(req.params.medicalCentreId, bodyData);
   if (!updatedMedicalCentre) {
     res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
   } else if (updatedMedicalCentre.error) {
-    res.status(403).json(updatedMedicalCentre),
+    res.status(403).json(updatedMedicalCentre);
   } else {
     res.json(updatedMedicalCentre);
   }
@@ -69,12 +69,12 @@ medicalCentreRouter.patch('/:medicalCentreId', async (req, res) => {
 
 // DELETE medical centre - http://localhost:3000/medicalCentres/_id
 medicalCentreRouter.delete('/:medicalCentreId', async (req, res) => {
-    const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
-    if (deletedMedicalCentre) {
-        res.json(deletedMedicalCentre);
-    } else {
-        res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
-    }
+  const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
+  if (deletedMedicalCentre) {
+    res.json(deletedMedicalCentre);
+  } else {
+    res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+  }
 });
 
 module.exports = medicalCentreRouter;

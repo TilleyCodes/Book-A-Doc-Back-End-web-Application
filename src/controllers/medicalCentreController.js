@@ -1,58 +1,38 @@
 const MedicalCentre = require('../models/medicalCentre');
 
 // GET ALL medical centres
-const getMedicalCentres = async () => {
-  try {
-    return await MedicalCentre.find();
-  } catch (error) {
-    console.error('Error getting medical centres:', error.message);
-    throw error;
-  }
-};
+async function getMedicalCentres() {
+  const medicateCentre = await MedicalCentre.find();
+  return medicateCentre;
+}
 
 // GET ONE medical centre
-const getMedicalCentre = async (id) => {
-  try {
-    return await MedicalCentre.findById(id);
-  } catch (error) {
-    console.error('Error getting medical centre:', error.message);
-    throw error;
-  }
-};
+async function getMedicalCentre(id) {
+  const medicalCentre = await MedicalCentre.findById(id);
+  return medicalCentre;
+}
 
 // CREATE medical centre
-const createMedicalCentre = async (data) => {
-  try {
-    return await MedicalCentre.create(data);
-  } catch (error) {
-    console.error('Error creating medical centre:', error.message);
-    throw error;
-  }
-};
+async function createMedicalCentre(data) {
+  const newMedicalCentre = await MedicalCentre.create(data);
+  return newMedicalCentre;
+}
 
 // UPDATE medical centre
-const updateMedicalCentre = async (id, data, options = { new: true }) => {
-  try {
-    return await MedicalCentre.findByIdAndUpdate(
-      id,
-      { $set: data },
-      options,
-    );
-  } catch (error) {
-    console.error('Error updating medical centre:', error.message);
-    throw error;
-  }
-};
+async function updateMedicalCentre(id, data, options = {}) {
+  const updatedMedicalCentre = await MedicalCentre.findByIdAndUpdate(
+    id,
+    { $set: data },
+    options,
+  );
+  return updatedMedicalCentre;
+}
 
 // DELETE medical centre
-const deleteMedicalCentre = async (id) => {
-  try {
-    return await MedicalCentre.findByIdAndDelete(id);
-  } catch (error) {
-    console.error('Error deleting medical centre:', error.message);
-    throw error;
-  }
-};
+async function deleteMedicalCentre(id) {
+  const deletedMedicalCentre = await MedicalCentre.findByIdAndDelete(id);
+  return deletedMedicalCentre;
+}
 
 module.exports = {
   getMedicalCentres,
