@@ -16,9 +16,9 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (request, response) => {
+app.get('/', (req, res) => {
   console.log('User visited home page.');
-  response.json({
+  res.json({
     message: 'Hello world!',
   });
 });
@@ -33,25 +33,20 @@ app.use('/doctors', doctorRouter);
 app.use('/doctorCentres', doctorCentreRouter);
 
 // ERROR HANDLING
-// Wildcard * means "match any route"
-// Put at the end of route declarations
-// to catch anything that does not match an earlier route
-app.get('*', (request, response) => {
-  console.log(`User tried to visit ${request.path}`);
-  response.status(404).json({
+app.get('*', (req, res) => {
+  console.log(`User tried to visit ${req.path}`);
+  res.status(404).json({
     message: 'Page not found. ',
-    attemptedPath: request.path,
+    attemptedPath: req.path,
   });
 });
 
 // Error handling catcher
 // applies to every route in the server by using .use
-app.use((error, request, response) => {
-  console.log('Error occurred in the server.');
-  console.log(JSON.stringify(error));
-  response.json({
-    message: error.message,
-  });
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: err.message });
 });
 
 app.listen(PORT, async () => {
