@@ -7,6 +7,7 @@ const patientRouter = require('./routes/patientRoutes');
 const medicalCentreRouter = require('./routes/medicalCentreRoutes');
 const specialtyRouter = require('./routes/specialtyRoutes');
 const doctorRouter = require('./routes/doctorRoutes');
+const doctorCentreRouter = require('./routes/doctorCentreRoutes');
 const availabilityRouter = require('./routes/availabilityRoute');
 const bookingRouter = require('./routes/bookingRoute');
 const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoute');
@@ -29,6 +30,7 @@ app.use('/doctor_availability', doctorAvailabilityRouter);
 app.use('/medicalCentres', medicalCentreRouter);
 app.use('/specialties', specialtyRouter);
 app.use('/doctors', doctorRouter);
+app.use('/doctorCentres', doctorCentreRouter);
 
 // ERROR HANDLING
 // Wildcard * means "match any route"

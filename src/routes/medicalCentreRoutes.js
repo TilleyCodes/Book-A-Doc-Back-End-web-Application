@@ -13,7 +13,7 @@ const medicalCentreRouter = express.Router();
 medicalCentreRouter.get('/', async (req, res) => {
   try {
     const medicalCentres = await getMedicalCentres();
-    res.json(medicalCentres);
+    res.status(200).json(medicalCentres);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -23,7 +23,7 @@ medicalCentreRouter.get('/', async (req, res) => {
 medicalCentreRouter.get('/:medicalCentreId', async (req, res) => {
   const medicalCentre = await getMedicalCentre(req.params.medicalCentreId);
   if (medicalCentre) {
-    res.json(medicalCentre);
+    res.status(200).json(medicalCentre);
   } else {
     res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
   }
@@ -72,7 +72,7 @@ medicalCentreRouter.patch('/:medicalCentreId', async (req, res) => {
     } else if (updatedMedicalCentre.error) {
       res.status(403).json(updatedMedicalCentre);
     } else {
-      res.json(updatedMedicalCentre);
+      res.status(200).json(updatedMedicalCentre);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -84,7 +84,7 @@ medicalCentreRouter.delete('/:medicalCentreId', async (req, res) => {
   try {
     const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
     if (deletedMedicalCentre) {
-      res.json(deletedMedicalCentre);
+      res.status(200).json(deletedMedicalCentre);
     } else {
       res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
     }

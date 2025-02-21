@@ -23,7 +23,7 @@ specialtyRouter.get('/', async (req, res) => {
 specialtyRouter.get('/:specialtyId', async (req, res) => {
   const specialty = await getSpecialty(req.params.specialtyId);
   if (specialty) {
-    res.json(specialty);
+    res.status(200).json(specialty);
   } else {
     res.status(404).json({ error: `Specialty with id ${req.params.specialtyId} not found` });
   }
@@ -50,13 +50,13 @@ specialtyRouter.patch('/:specialtyId', async (req, res) => {
       specialtyName: req.body.specialtyName,
       description: req.body.description,
     };
-    const updatedSpecialty = await updateSpecialty(req.params.SpecialtyId, bodyData);
+    const updatedSpecialty = await updateSpecialty(req.params.specialtyId, bodyData);
     if (!updatedSpecialty) {
       res.status(404).json({ error: `Specialty with id ${req.params.specialtyId} not found` });
     } else if (updatedSpecialty.error) {
       res.status(403).json(updatedSpecialty);
     } else {
-      res.json(updatedSpecialty);
+      res.status(200).json(updatedSpecialty);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +68,7 @@ specialtyRouter.delete('/:specialtyId', async (req, res) => {
   try {
     const deletedSpecialty = await deleteSpecialty(req.params.specialtyId);
     if (deletedSpecialty) {
-      res.json(deletedSpecialty);
+      res.status(200).json(deletedSpecialty);
     } else {
       res.status(404).json({ error: `Specialty with id ${req.params.specialtyId} not found` });
     }

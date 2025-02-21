@@ -13,7 +13,7 @@ const doctorRouter = express.Router();
 doctorRouter.get('/', async (req, res) => {
   try {
     const doctors = await getDoctors();
-    res.json(doctors);
+    res.status(200).json(doctors);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -23,7 +23,7 @@ doctorRouter.get('/', async (req, res) => {
 doctorRouter.get('/:doctorId', async (req, res) => {
   const doctor = await getDoctor(req.params.doctorId);
   if (doctor) {
-    res.json(doctor);
+    res.status(200).json(doctor);
   } else {
     res.status(404).json({ error: `Doctor with id ${req.params.doctorId} not found` });
   }
@@ -50,13 +50,13 @@ doctorRouter.patch('/:doctorId', async (req, res) => {
       doctorName: req.body.doctorName,
       specialtyId: req.body.specialtyId,
     };
-    const updatedDoctor = await updateDoctor(req.params.DoctorId, bodyData);
+    const updatedDoctor = await updateDoctor(req.params.doctorId, bodyData);
     if (!updatedDoctor) {
       res.status(404).json({ error: `Doctor with id ${req.params.doctorId} not found` });
     } else if (updatedDoctor.error) {
       res.status(403).json(updatedDoctor);
     } else {
-      res.json(updatedDoctor);
+      res.status(200).json(updatedDoctor);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +68,7 @@ doctorRouter.delete('/:doctorId', async (req, res) => {
   try {
     const deletedDoctor = await deleteDoctor(req.params.doctorId);
     if (deletedDoctor) {
-      res.json(deletedDoctor);
+      res.status(200).json(deletedDoctor);
     } else {
       res.status(404).json({ error: `Doctor with id ${req.params.doctorId} not found` });
     }

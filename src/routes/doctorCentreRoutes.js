@@ -13,7 +13,7 @@ const doctorCentreRouter = express.Router();
 doctorCentreRouter.get('/', async (req, res) => {
   try {
     const doctorCentres = await getDoctorCentres();
-    res.json(doctorCentres);
+    res.status(200).json(doctorCentres);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -23,7 +23,7 @@ doctorCentreRouter.get('/', async (req, res) => {
 doctorCentreRouter.get('/:doctorCentreId', async (req, res) => {
   const doctorCentre = await getDoctorCentre(req.params.doctorCentreId);
   if (doctorCentre) {
-    res.json(doctorCentre);
+    res.status(200).json(doctorCentre);
   } else {
     res.status(404).json({ error: `Doctor centre with id ${req.params.doctorCentreId} not found` });
   }
@@ -33,8 +33,8 @@ doctorCentreRouter.get('/:doctorCentreId', async (req, res) => {
 doctorCentreRouter.post('/', async (req, res) => {
   try {
     const bodyData = {
-      doctorCentreName: req.body.doctorCentreName,
-      specialtyId: req.body.specialtyId,
+      doctorId: req.body.doctorId,
+      medicalCentreId: req.body.medicalCentreId,
     };
     const newDoctorCentre = await createDoctorCentre(bodyData);
     res.status(201).json(newDoctorCentre);
@@ -47,16 +47,16 @@ doctorCentreRouter.post('/', async (req, res) => {
 doctorCentreRouter.patch('/:doctorCentreId', async (req, res) => {
   try {
     const bodyData = {
-      doctorCentreName: req.body.doctorCentreName,
-      specialtyId: req.body.specialtyId,
+      doctorId: req.body.doctorId,
+      medicalCentreId: req.body.medicalCentreId,
     };
-    const updatedDoctorCentre = await updateDoctorCentre(req.params.DoctorCentreId, bodyData);
+    const updatedDoctorCentre = await updateDoctorCentre(req.params.doctorCentreId, bodyData);
     if (!updatedDoctorCentre) {
       res.status(404).json({ error: `Doctor centre with id ${req.params.doctorCentreId} not found` });
     } else if (updatedDoctorCentre.error) {
       res.status(403).json(updatedDoctorCentre);
     } else {
-      res.json(updatedDoctorCentre);
+      res.status(200).json(updatedDoctorCentre);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,7 +68,7 @@ doctorCentreRouter.delete('/:doctorCentreId', async (req, res) => {
   try {
     const deletedDoctorCentre = await deleteDoctorCentre(req.params.doctorCentreId);
     if (deletedDoctorCentre) {
-      res.json(deletedDoctorCentre);
+      res.status(200).json(deletedDoctorCentre);
     } else {
       res.status(404).json({ error: `Doctor centre with id ${req.params.doctorCentreId} not found` });
     }
