@@ -10,64 +10,49 @@ const {
   deleteBooking,
 } = require('../controllers/bookingController');
 
+const errorHandler = require('../middleware/errorHandler');
+
 // GET ALL | http://localhost:3000/bookings
-bookingRouter.get('/', async (req, res) => {
-  try {
-    const bookings = await getBookings();
-    res.status(200).json(bookings);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+bookingRouter.get('/', errorHandler(async (req, res) => {
+  const bookings = await getBookings();
+  res.status(200).json(bookings);
+}));
 
 // GET ONE | http://localhost:3000/bookings/bookingId
-bookingRouter.get('/:bookingId', async (req, res) => {
+bookingRouter.get('/:bookingId', errorHandler(async (req, res) => {
   const booking = await getBooking(req.params.bookingId);
-  if (booking) {
-    res.status(200).json(booking);
-  } else {
+  if (!booking) {
     res.status(404).json({ error: `Booking with id: ${req.params.bookingId} does not exist` });
   }
-});
+  res.status(200).json(booking);
+}));
 
 // CREATE | http://localhost:3000/bookings
-bookingRouter.post('/', async (req, res) => {
-  try {
-    const newBooking = await createBooking(req.body);
-    res.status(201).json(newBooking);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+bookingRouter.post('/', errorHandler(async (req, res) => {
+  const newBooking = await createBooking(req.body);
+  res.status(201).json(newBooking);
+}));
 
 // UPDATE | http://localhost:3000/bookings/bookingId
-bookingRouter.patch('/:bookingId', async (req, res) => {
-  try {
-    const { bookingId } = req.params;
-    const updatedBooking = await updateBooking(bookingId, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!updatedBooking) {
-      res.status(404).json({ error: `Booking with id: ${req.params.bookingId} does not exist` });
-    }
-    res.status(200).json(updatedBooking);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+bookingRouter.patch('/:bookingId', errorHandler(async (req, res) => {
+  const { bookingId } = req.params;
+  const updatedBooking = await updateBooking(bookingId, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updatedBooking) {
+    res.status(404).json({ error: `Booking with id: ${req.params.bookingId} does not exist` });
   }
-});
+  res.status(200).json(updatedBooking);
+}));
 
 // DELETE | http://localhost:3000/bookings/bookingId
-bookingRouter.delete('/:bookingId', async (req, res) => {
-  try {
-    const deletedBooking = await deleteBooking(req.params.bookingId);
-    if (!deletedBooking) {
-      res.status(404).json({ error: `Booking with id: ${req.params.bookingId} does not exist` });
-    }
-    res.status(200).json(deletedBooking);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+bookingRouter.delete('/:bookingId', errorHandler(async (req, res) => {
+  const deletedBooking = await deleteBooking(req.params.bookingId);
+  if (!deletedBooking) {
+    res.status(404).json({ error: `Booking with id: ${req.params.bookingId} does not exist` });
   }
-});
+  res.status(200).json(deletedBooking);
+}));
 
 module.exports = bookingRouter;
