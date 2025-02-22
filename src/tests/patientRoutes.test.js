@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const request = require('supertest');
 const app = require('../app');
 const Patient = require('../models/patient');
@@ -70,7 +71,6 @@ describe('Patients route golden path', () => {
 
     // Check that the first patient's _id is 24 characters long
     expect(response.status).toBe(200);
-    // eslint-disable-next-line no-underscore-dangle
     expect(response.body[0]._id).toHaveLength(24);
     expect(Patient.find).toHaveBeenCalledTimes(1);
   });

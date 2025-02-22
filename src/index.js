@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const PORT = process.env.PORT || 3000;
+const cors = require('cors');
 const patientRouter = require('./routes/patientRoutes');
 const medicalCentreRouter = require('./routes/medicalCentreRoutes');
 const specialtyRouter = require('./routes/specialtyRoutes');
@@ -13,6 +14,13 @@ const bookingRouter = require('./routes/bookingRoute');
 const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoute');
 
 const app = express();
+
+// Configure CORS
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://deployedApp.com'],
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
