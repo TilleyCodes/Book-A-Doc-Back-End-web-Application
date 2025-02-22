@@ -9,9 +9,9 @@ const medicalCentreRouter = require('./routes/medicalCentreRoutes');
 const specialtyRouter = require('./routes/specialtyRoutes');
 const doctorRouter = require('./routes/doctorRoutes');
 const doctorCentreRouter = require('./routes/doctorCentreRoutes');
-const availabilityRouter = require('./routes/availabilityRoute');
-const bookingRouter = require('./routes/bookingRoute');
-const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoute');
+const availabilityRouter = require('./routes/availabilityRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
+const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoutes');
 
 const app = express();
 

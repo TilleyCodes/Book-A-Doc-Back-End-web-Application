@@ -224,6 +224,7 @@ async function seedDatabase() {
     await Doctor.deleteMany({});
     await DoctorCentre.deleteMany({});
     await Booking.deleteMany({});
+    await DoctorAvailability.deleteMany({});
     console.log('Existing data cleared');
 
     // Insert new data
