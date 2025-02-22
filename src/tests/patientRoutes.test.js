@@ -9,7 +9,7 @@ const samplePatientData = [
     firstName: 'John',
     lastName: 'Doe',
     email: 'john.doe@example.com',
-    dateOfBirth: '1990-01-01T00:00:00.000Z',
+    dateOfBirth: '2000-01-01',
     address: {
       street: '123 Main St',
       city: 'Anytown',
@@ -62,17 +62,24 @@ const samplePatientData = [
   },
 ];
 
-describe('Patients GET routes testing', () => {
-  test('GET ALL | should return a patient with _id length of 24', async () => {
+describe('Patients validation tests', () => {
+  test('GET ALL | All patients should be over 18 years of age', async () => {
     Patient.find = jest.fn().mockResolvedValue(samplePatientData);
 
     // Make a GET request to /patients
     const response = await request(app).get('/patients');
 
-    // Check that the first patient's _id is 24 characters long
     expect(response.status).toBe(200);
-    expect(response.body[0]._id).toHaveLength(24);
-    expect(Patient.find).toHaveBeenCalledTimes(1);
+
+    // Loop through all objects and test if dateOfBirth is >= 18 years
+    response.body.forEach((patient) => {
+      const dob = new Date(patient.dateOfBirth);
+      const diffMs = Date.now() - dob.getTime(); // Difference in milliseconds
+      const ageDate = new Date(diffMs); // epoch start + diff = age in date form
+      const age = Math.abs(ageDate.getUTCFullYear() - 1970); // years since 1970
+
+      expect(age).toBeGreaterThanOrEqual(18);
+    });
   });
 
   // Test for GET ONE route
