@@ -152,5 +152,6 @@ describe('Patient PATCH route testing', () => {
     Patient.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedSinglePatientData);
     const res = await request(app).patch('/patients/:patientId');
     expect(res.status).toBe(200);
+    expect(res.body.dateOfBirth).toBe('1987-06-13');
   });
 });
