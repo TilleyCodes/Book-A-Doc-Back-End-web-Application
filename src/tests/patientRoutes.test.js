@@ -3,7 +3,7 @@ const request = require('supertest');
 const app = require('../app');
 const Patient = require('../models/patient');
 
-const goodSamplePatientData = [
+const samplePatientData = [
   {
     _id: '67b6927a4644d8903cd58015',
     firstName: 'John',
@@ -62,9 +62,9 @@ const goodSamplePatientData = [
   },
 ];
 
-describe('Patients route golden path', () => {
+describe('Patients GET routes testing', () => {
   test('GET ALL | should return a patient with _id length of 24', async () => {
-    Patient.find = jest.fn().mockResolvedValue(goodSamplePatientData);
+    Patient.find = jest.fn().mockResolvedValue(samplePatientData);
 
     // Make a GET request to /patients
     const response = await request(app).get('/patients');
@@ -78,7 +78,7 @@ describe('Patients route golden path', () => {
   // Test for GET ONE route
   // Ensure only one object is returned
   test('GET ONE | should return only one object from sample of three and fname to be Liam', async () => {
-    Patient.find = jest.fn().mockResolvedValue(goodSamplePatientData);
+    Patient.find = jest.fn().mockResolvedValue(samplePatientData);
 
     // Make a GET request to /patients/:patientId
     const response = await request(app).get('/patients/67b6927a4644d8903cd58016');
@@ -101,6 +101,56 @@ describe('Patients route golden path', () => {
   });
 });
 
-// describe('Patient route nasty path', () => {
-//   test('CREATE | Throw error')
-// })
+// New data for POST and PATCH testing
+const newPatientData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
+  dateOfBirth: '1990-01-01T00:00:00.000Z',
+  address: {
+    street: '123 Main St',
+    city: 'Anytown',
+  },
+  phoneNumber: '0400 928 882',
+  password: 'password123',
+};
+
+// Patient POST route testing
+describe('Patient POST route testing', () => {
+  test('POST | Should create a new patient object', async () => {
+    Patient.create = jest.fn().mockResolvedValue(newPatientData);
+    const res = await request(app).post('/patients');
+    expect(res.status).toBe(200);
+  });
+});
+
+// Patient PATCH route testing
+describe('Patient PATCH route testing', () => {
+  test('PATCH | Updated object should return lastName Doey and status code of 200', async () => {
+    const updatedPatientData = {
+      firstName: 'John',
+      lastName: 'Doey',
+      email: 'john.doe@example.com',
+      dateOfBirth: '1990-01-01T00:00:00.000Z',
+      address: {
+        street: '123 Main St',
+        city: 'Anytown',
+      },
+      phoneNumber: '0400 928 882',
+      password: 'password123',
+    };
+    Patient.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedPatientData);
+    const res = await request(app).patch('/patients/:patientId');
+    expect(res.body.lastName).toBe('Doey');
+    expect(res.status).toBe(200);
+  });
+
+  test('PATCH | Expect 200 response after only one key value pair to be used in update.', async () => {
+    const updatedSinglePatientData = {
+      dateOfBirth: '1987-06-13',
+    };
+    Patient.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedSinglePatientData);
+    const res = await request(app).patch('/patients/:patientId');
+    expect(res.status).toBe(200);
+  });
+});
