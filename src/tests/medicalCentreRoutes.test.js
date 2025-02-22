@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 const request = require('supertest');
 const app = require('../app');
 const MedicalCentre = require('../models/medicalCentre');

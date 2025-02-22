@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/errorHandler');
 // Import all models
 const Patient = require('./models/patient');
 const MedicalCentre = require('./models/medicalCentre');
+const Specialty = require('./models/specialty');
 
 // Import all routers
 const patientRouter = require('./routes/patientRoutes');
@@ -136,6 +137,62 @@ app.delete('/medicalCentres/:medicalCentreId', errorHandler(async (req, res) => 
   }
 
   return res.status(200).json(deletedCentre);
+}));
+
+// Testing routes for specialties
+app.get('/specialties', async (_req, res) => {
+  try {
+    const specialties = await Specialty.find();
+    return res.status(200).json(specialties);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/specialties/:specialtyId', async (req, res) => {
+  try {
+    const { specialtyId } = req.params;
+    const specialty = await Specialty.findById(specialtyId);
+
+    if (!specialty) {
+      return res.status(404).json({ message: 'Specialty not found' });
+    }
+
+    return res.status(200).json(specialty);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/specialties', errorHandler(async (req, res) => {
+  const newSpecialty = await Specialty.create(req.body);
+  return res.status(201).json(newSpecialty);
+}));
+
+app.patch('/specialties/:specialtyId', errorHandler(async (req, res) => {
+  const { specialtyId } = req.params;
+  const updatedSpecialty = await Specialty.findByIdAndUpdate(
+    specialtyId,
+    req.body,
+    { new: true, runValidators: true },
+  );
+
+  if (!updatedSpecialty) {
+    return res.status(404).json({ error: `Specialty with id ${specialtyId} not found` });
+  }
+
+  return res.status(200).json(updatedSpecialty);
+}));
+
+app.delete('/specialties/:specialtyId', errorHandler(async (req, res) => {
+  const { specialtyId } = req.params;
+  const deletedSpecialty = await Specialty.findByIdAndDelete(specialtyId);
+
+  if (!deletedSpecialty) {
+    return res.status(404).json({ error: `Specialty with id ${specialtyId} not found` });
+  }
+
+  return res.status(200).json(deletedSpecialty);
 }));
 
 // Router handlers
