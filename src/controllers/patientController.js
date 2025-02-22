@@ -15,7 +15,8 @@ async function getPatient(id) {
 // CREATE data from PatientsModel db
 async function createPatient(data) {
   const newPatient = await Patient.create(data);
-  return newPatient;
+  const token = newPatient.generateAuthToken();
+  return { newPatient, token };
 }
 
 // UPDATE data from PatientsModel db

@@ -1,4 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const hashPassword = require('../middleware/hashPassword');
 
 // Schema with data properties
@@ -73,6 +75,20 @@ patientSchema.index({ firstName: 1, lastName: 1 });
 
 // hashPassword middleware
 patientSchema.plugin(hashPassword, { saltRounds: 12 });
+
+patientSchema.methods.generateAuthToken = function createToken () {
+  // Create token payload
+  const payload = { id: this._id, email: this.email };
+
+  // Sign the token using a secret and options
+  const token = jwt.sign(
+    payload,
+    process.env.JWT_SECRET || 'default_secret',
+    { expiresIn: '1d' },
+  );
+
+  return token;
+};
 
 // Model that uses schema
 const Patient = mongoose.model('Patient', patientSchema);

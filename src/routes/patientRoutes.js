@@ -29,8 +29,8 @@ patientRouter.get('/:patientId', errorHandler(async (req, res) => {
 
 // CREATE | http://localhost:3000/patients
 patientRouter.post('/', errorHandler(async (req, res) => {
-  const newPatient = await createPatient(req.body);
-  res.status(201).json(newPatient);
+  const result = await createPatient(req.body);
+  res.status(201).json(result);
 }));
 
 // UPDATE | http://localhost:3000/patients/patient_id
