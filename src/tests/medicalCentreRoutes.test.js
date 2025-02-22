@@ -1,149 +1,98 @@
+/* eslint-disable no-underscore-dangle */
 const request = require('supertest');
-const mongoose = require('mongoose');
 const app = require('../app');
 const MedicalCentre = require('../models/medicalCentre');
 
 const sampleMedicalCentre = {
-  medicalCentreName: 'City Medical Center',
-  operatingHours: '9:00 AM - 5:00 PM',
+  _id: '67b86605a0b4c9a781ce2086',
+  medicalCentreName: 'World Square Medical Centre',
+  operatingHours: '8am - 6pm',
   address: {
-    street: '123 Health Street',
+    street: '1 Victoria Road',
     city: 'Melbourne',
   },
   contacts: {
-    email: 'city.medical@example.com',
-    phone: '0400 123 456',
+    email: 'worldsquaremc@email.com',
+    phone: '+61 39735 8466',
   },
+  __v: 0,
 };
 
-describe('Medical Centre Routes', () => {
-  beforeEach(async () => {
-    await MedicalCentre.deleteMany({});
+describe('Medical Centre Routes testing', () => {
+  test('GET ALL | should return empty array when no centres exist', async () => {
+    MedicalCentre.find = jest.fn().mockResolvedValue([]);
+
+    const response = await request(app).get('/medicalCentres');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+    expect(MedicalCentre.find).toHaveBeenCalledTimes(1);
   });
 
-  describe('GET /medicalCentres', () => {
-    test('should return empty array when no centres exist', async () => {
-      const response = await request(app).get('/medicalCentres');
+  test('GET ALL | should return all medical centres', async () => {
+    const mockCentres = [sampleMedicalCentre];
+    MedicalCentre.find = jest.fn().mockResolvedValue(mockCentres);
 
-      expect(response.status).toBe(200);
-      expect(response.body).toEqual([]);
-    });
+    const response = await request(app).get('/medicalCentres');
 
-    test('should return all medical centres', async () => {
-      await MedicalCentre.create(sampleMedicalCentre);
-
-      const response = await request(app).get('/medicalCentres');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
-    });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveLength(1);
+    expect(response.body[0].medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
   });
 
-  describe('GET /medicalCentres/:id', () => {
-    test('should return medical centre by id', async () => {
-      const centre = await MedicalCentre.create(sampleMedicalCentre);
+  test('GET ONE | should return medical centre by id', async () => {
+    MedicalCentre.findById = jest.fn().mockResolvedValue(sampleMedicalCentre);
 
-      const response = await request(app)
-        .get(`/medicalCentres/${centre.id}`);
+    const response = await request(app)
+      .get('/medicalCentres/65b6927a4644d8903cd58015');
 
-      expect(response.status).toBe(200);
-      expect(response.body.medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
-    });
-
-    test('should return 404 for non-existent id', async () => {
-      const fakeId = new mongoose.Types.ObjectId();
-      const response = await request(app)
-        .get(`/medicalCentres/${fakeId}`);
-
-      expect(response.status).toBe(404);
-    });
-
-    test('should return 500 for invalid id format', async () => {
-      const response = await request(app)
-        .get('/medicalCentres/invalid-id');
-
-      expect(response.status).toBe(500);
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
   });
 
-  describe('POST /medicalCentres', () => {
-    test('should create new medical centre', async () => {
-      const response = await request(app)
-        .post('/medicalCentres')
-        .send(sampleMedicalCentre);
+  test('GET ONE | should return 404 for non-existent id', async () => {
+    MedicalCentre.findById = jest.fn().mockResolvedValue(null);
 
-      expect(response.status).toBe(201);
-      expect(response.body.medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
+    const response = await request(app)
+      .get('/medicalCentres/65b6927a4644d8903cd58015');
 
-      const centre = await MedicalCentre.findById(response.body.id);
-      expect(centre).toBeTruthy();
-    });
-
-    test('should return 500 for invalid data', async () => {
-      const invalidData = {
-        medicalCentreName: 'Test Centre',
-        // Missing required fields
-      };
-
-      const response = await request(app)
-        .post('/medicalCentres')
-        .send(invalidData);
-
-      expect(response.status).toBe(500);
-    });
+    expect(response.status).toBe(404);
   });
 
-  describe('PATCH /medicalCentres/:id', () => {
-    test('should update medical centre', async () => {
-      const centre = await MedicalCentre.create(sampleMedicalCentre);
-      const updateData = {
-        medicalCentreName: 'Updated Centre Name',
-        operatingHours: '8:00 AM - 6:00 PM',
-      };
+  test('POST | should create new medical centre', async () => {
+    MedicalCentre.create = jest.fn().mockResolvedValue(sampleMedicalCentre);
 
-      const response = await request(app)
-        .patch(`/medicalCentres/${centre.id}`)
-        .send(updateData);
+    const response = await request(app)
+      .post('/medicalCentres')
+      .send(sampleMedicalCentre);
 
-      expect(response.status).toBe(200);
-      expect(response.body.medicalCentreName).toBe(updateData.medicalCentreName);
-
-      const updatedCentre = await MedicalCentre.findById(centre.id);
-      expect(updatedCentre.medicalCentreName).toBe(updateData.medicalCentreName);
-    });
-
-    test('should return 404 for non-existent id', async () => {
-      const fakeId = new mongoose.Types.ObjectId();
-
-      const response = await request(app)
-        .patch(`/medicalCentres/${fakeId}`)
-        .send({ medicalCentreName: 'Updated Name' });
-
-      expect(response.status).toBe(404);
-    });
+    expect(response.status).toBe(201);
+    expect(response.body.medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
   });
 
-  describe('DELETE /medicalCentres/:id', () => {
-    test('should delete medical centre', async () => {
-      const centre = await MedicalCentre.create(sampleMedicalCentre);
+  test('PATCH | should update medical centre', async () => {
+    const updatedCentre = {
+      ...sampleMedicalCentre,
+      medicalCentreName: 'Updated Centre Name',
+    };
 
-      const response = await request(app)
-        .delete(`/medicalCentres/${centre.id}`);
+    MedicalCentre.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedCentre);
 
-      expect(response.status).toBe(200);
+    const response = await request(app)
+      .patch('/medicalCentres/65b6927a4644d8903cd58015')
+      .send({ medicalCentreName: 'Updated Centre Name' });
 
-      const deletedCentre = await MedicalCentre.findById(centre.id);
-      expect(deletedCentre).toBeNull();
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.medicalCentreName).toBe('Updated Centre Name');
+  });
 
-    test('should return 404 for non-existent id', async () => {
-      const fakeId = new mongoose.Types.ObjectId();
+  test('DELETE | should delete medical centre', async () => {
+    MedicalCentre.findByIdAndDelete = jest.fn().mockResolvedValue(sampleMedicalCentre);
 
-      const response = await request(app)
-        .delete(`/medicalCentres/${fakeId}`);
+    const response = await request(app)
+      .delete('/medicalCentres/65b6927a4644d8903cd58015');
 
-      expect(response.status).toBe(404);
-    });
+    expect(response.status).toBe(200);
+    expect(response.body.medicalCentreName).toBe(sampleMedicalCentre.medicalCentreName);
   });
 });

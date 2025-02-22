@@ -1,12 +1,41 @@
 /* eslint-disable no-underscore-dangle */
 // app file for testing purposes only
 const express = require('express');
-const Patient = require('./models/patient');
+const cors = require('cors');
 const errorHandler = require('./middleware/errorHandler');
+
+// Import all models
+const Patient = require('./models/patient');
+const MedicalCentre = require('./models/medicalCentre');
+
+// Import all routers
+const patientRouter = require('./routes/patientRoutes');
+const medicalCentreRouter = require('./routes/medicalCentreRoutes');
+const specialtyRouter = require('./routes/specialtyRoutes');
+const doctorRouter = require('./routes/doctorRoutes');
+const doctorCentreRouter = require('./routes/doctorCentreRoutes');
+const availabilityRouter = require('./routes/availabilityRoutes');
+const bookingRouter = require('./routes/bookingRoutes');
+const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoutes');
 
 const app = express();
 
+// Middleware
 app.use(express.json());
+
+// Configure CORS
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://deployedApp.com'],
+  optionsSuccessStatus: 200,
+};
+app.use(cors(corsOptions));
+
+// Welcome route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Welcome to Book A Doc API!',
+  });
+});
 
 // Routes for patients testing
 app.get('/patients', async (req, res) => {
@@ -29,15 +58,15 @@ app.get('/patients/:patientId', async (req, res) => {
       return res.status(404).json({ message: 'Patient not found' });
     }
 
-    res.status(200).json([patient]);
+    return res.status(200).json([patient]);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 });
 
 app.post('/patients', errorHandler(async (req, res) => {
   const newPatient = await Patient.create();
-  res.status(200).json(newPatient);
+  return res.status(200).json(newPatient);
 }));
 
 app.patch('/patients/:patientId', errorHandler(async (req, res) => {
@@ -50,7 +79,85 @@ app.patch('/patients/:patientId', errorHandler(async (req, res) => {
   if (!updatedPatient) {
     return res.status(404).json({ error: `Patient with id: ${patientId} does not exist.` });
   }
-  res.status(200).json(updatedPatient);
+  return res.status(200).json(updatedPatient);
 }));
+
+// Testing routes for medical centres
+app.get('/medicalCentres', async (req, res) => {
+  try {
+    const centres = await MedicalCentre.find();
+    res.status(200).json(centres);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/medicalCentres/:medicalCentreId', async (req, res) => {
+  try {
+    const { medicalCentreId } = req.params;
+    const centre = await MedicalCentre.findById(medicalCentreId);
+
+    if (!centre) {
+      return res.status(404).json({ message: 'Medical centre not found' });
+    }
+
+    return res.status(200).json(centre);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/medicalCentres', errorHandler(async (req, res) => {
+  const newCentre = await MedicalCentre.create(req.body);
+  return res.status(201).json(newCentre);
+}));
+
+app.patch('/medicalCentres/:medicalCentreId', errorHandler(async (req, res) => {
+  const { medicalCentreId } = req.params;
+  const updatedCentre = await MedicalCentre.findByIdAndUpdate(
+    medicalCentreId,
+    req.body,
+    { new: true, runValidators: true },
+  );
+
+  if (!updatedCentre) {
+    return res.status(404).json({ error: `Medical centre with id: ${medicalCentreId} does not exist.` });
+  }
+
+  return res.status(200).json(updatedCentre);
+}));
+
+app.delete('/medicalCentres/:medicalCentreId', errorHandler(async (req, res) => {
+  const { medicalCentreId } = req.params;
+  const deletedCentre = await MedicalCentre.findByIdAndDelete(medicalCentreId);
+
+  if (!deletedCentre) {
+    return res.status(404).json({ error: `Medical centre with id: ${medicalCentreId} does not exist.` });
+  }
+
+  return res.status(200).json(deletedCentre);
+}));
+
+// Router handlers
+app.use('/patients', patientRouter);
+app.use('/medicalCentres', medicalCentreRouter);
+app.use('/specialties', specialtyRouter);
+app.use('/doctors', doctorRouter);
+app.use('/doctorCentres', doctorCentreRouter);
+app.use('/availabilities', availabilityRouter);
+app.use('/bookings', bookingRouter);
+app.use('/doctorAvailabilities', doctorAvailabilityRouter);
+
+// 404 Handler
+app.get('*', (req, res) => {
+  res.status(404).json({
+    message: 'Page not found.',
+    attemptedPath: req.path,
+  });
+});
+
+// Global Error Handler
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, _next) => res.status(500).json({ error: err.message }));
 
 module.exports = app;
