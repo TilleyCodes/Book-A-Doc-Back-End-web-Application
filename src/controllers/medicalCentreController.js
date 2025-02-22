@@ -2,8 +2,8 @@ const MedicalCentre = require('../models/medicalCentre');
 
 // GET ALL medical centres
 async function getMedicalCentres() {
-  const medicateCentre = await MedicalCentre.find();
-  return medicateCentre;
+  const medicalCentre = await MedicalCentre.find();
+  return medicalCentre;
 }
 
 // GET ONE medical centre
