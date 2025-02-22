@@ -62,7 +62,7 @@ const samplePatientData = [
   },
 ];
 
-describe('Patients validation tests', () => {
+describe('Patients GET validation tests', () => {
   test('GET ALL | All patients should be over 18 years of age', async () => {
     Patient.find = jest.fn().mockResolvedValue(samplePatientData);
 
@@ -108,8 +108,9 @@ describe('Patients validation tests', () => {
   });
 });
 
-// New data for POST and PATCH testing
+// New data for POST PATCH and DELETE testing
 const newPatientData = {
+  _id: '67b7ebde029b18de06ebc4c0',
   firstName: 'John',
   lastName: 'Doe',
   email: 'john.doe@example.com',
@@ -160,5 +161,24 @@ describe('Patient PATCH route testing', () => {
     const res = await request(app).patch('/patients/:patientId');
     expect(res.status).toBe(200);
     expect(res.body.dateOfBirth).toBe('1987-06-13');
+  });
+});
+
+// Patient DELETE route testing
+describe('Patient DELETE route testing', () => {
+  test('DELETE | Object should be deleted', async () => {
+    Patient.findByIdAndDelete = jest.fn().mockResolvedValue(newPatientData);
+    const res = await request(app).delete('/patients/:patientId');
+    expect(res.status).toBe(200);
+  });
+
+  // Give false id and test that delete function can handle it
+  test('DELETE | Should return 404 error for patient id that doesnt exist', async () => {
+    const falsePatientId = '68b8ebde029b18de06ebc4c0';
+    Patient.findByIdAndDelete = jest.fn().mockResolvedValue(null);
+    const res = await request(app).delete(`/patients/${falsePatientId}`);
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('error');
+    expect(res.body.error).toMatch(new RegExp(falsePatientId));
   });
 });

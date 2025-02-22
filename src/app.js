@@ -83,6 +83,15 @@ app.patch('/patients/:patientId', errorHandler(async (req, res) => {
   return res.status(200).json(updatedPatient);
 }));
 
+app.delete('/patients/:patientId', errorHandler(async (req, res) => {
+  const { patientId } = req.params;
+  const deletedPatient = await Patient.findByIdAndDelete(patientId);
+  if (!deletedPatient) {
+    return res.status(404).json({ error: `Patient with id: ${patientId} does not exist.` });
+  }
+  return res.status(200).json(deletedPatient);
+}));
+
 // Testing routes for medical centres
 app.get('/medicalCentres', async (req, res) => {
   try {
