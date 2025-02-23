@@ -5,19 +5,23 @@ const medicalCentreSchema = new mongoose.Schema({
   medicalCentreName: {
     type: String,
     required: [true, 'Medical centre name is required'],
+    trim: true,
   },
   operatingHours: {
     type: String,
     required: [true, 'Operating hours are required'],
+    trim: true,
   },
   address: {
     street: {
       type: String,
       required: [true, 'Street address is required'],
+      trim: true,
     },
     city: {
       type: String,
       required: [true, 'City is required'],
+      trim: true,
     },
   },
   contacts: {
@@ -26,6 +30,7 @@ const medicalCentreSchema = new mongoose.Schema({
       required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
+      trim: true,
       validate: {
         validator(value) {
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
@@ -36,6 +41,7 @@ const medicalCentreSchema = new mongoose.Schema({
     phone: {
       type: String,
       required: [true, 'Phone number is required'],
+      trim: true,
     },
   },
 });
