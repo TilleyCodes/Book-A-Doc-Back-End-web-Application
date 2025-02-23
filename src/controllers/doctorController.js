@@ -2,8 +2,8 @@ const Doctor = require('../models/doctor');
 
 // GET ALL doctors
 async function getDoctors() {
-  const doctor = await Doctor.find();
-  return doctor;
+  const doctors = await Doctor.find();
+  return doctors;
 }
 
 // GET ONE doctor

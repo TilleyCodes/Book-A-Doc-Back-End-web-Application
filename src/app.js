@@ -224,6 +224,9 @@ app.get('*', (req, res) => {
 
 // Global Error Handler
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, _next) => res.status(500).json({ error: err.message }));
+app.use((err, req, res, _next) => {
+  const { message, status = 500 } = err;
+  res.status(status).json({ error: message });
+});
 
 module.exports = app;

@@ -184,11 +184,11 @@ const medicalCentresData = [
 
 const specialtiesData = [
   {
-    specialtyName: "GP Women's Health",
+    specialtyName: 'GP Women\'s Health',
     description: "Specialised care in women's health including reproductive health, pregnancy care, and menopause management.",
   },
   {
-    specialtyName: "GP Men's Health",
+    specialtyName: 'GP Men\'s Health',
     description: 'Focused on male-specific health issues including prostate health and testosterone management.',
   },
   {
