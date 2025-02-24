@@ -227,16 +227,16 @@ async function seedDatabase() {
     await DoctorAvailability.deleteMany({});
     console.log('Existing data cleared');
 
-    // Hassh paaswords before inserting patientes
-    const hashedPatiensData = await Promise.all(
-      patientsData.map(async (patient) => ({
-        ...patient,
-        password: await bcrypt.hash(patient.password, 10)
-      }))
+    // Create patients using the model to trigger middleware
+    const insertedPatients = await Promise.all(
+      patientsData.map(patientData => {
+        const patient = new Patient(patientData);
+        return patient.save();
+      })
     );
+    console.log('Patients seeded with hashed passwords');
 
     // Insert new data
-    const insertedPatients = await Patient.insertMany(patientsData);
     const insertedAvailabilities = await Availability.insertMany(availabilitiesData);
     const insertedMedicalCentres = await MedicalCentre.insertMany(medicalCentresData);
     const insertedSpecialties = await Specialty.insertMany(specialtiesData);
