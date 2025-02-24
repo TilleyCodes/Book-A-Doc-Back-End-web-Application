@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const Patient = require('../models/patient');
 const Availability = require('../models/availability');
@@ -226,6 +226,14 @@ async function seedDatabase() {
     await Booking.deleteMany({});
     await DoctorAvailability.deleteMany({});
     console.log('Existing data cleared');
+
+    // Hassh paaswords before inserting patientes
+    const hashedPatiensData = await Promise.all(
+      patientsData.map(async (patient) => ({
+        ...patient,
+        password: await bcrypt.hash(patient.password, 10)
+      }))
+    );
 
     // Insert new data
     const insertedPatients = await Patient.insertMany(patientsData);

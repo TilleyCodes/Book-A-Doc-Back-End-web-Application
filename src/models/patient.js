@@ -1,6 +1,6 @@
-/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const hashPassword = require('../middleware/hashPassword');
 
 // Schema with data properties
@@ -72,6 +72,15 @@ const patientSchema = new mongoose.Schema({
 });
 
 patientSchema.index({ firstName: 1, lastName: 1 });
+
+// comparePassword method
+patientSchema.methods.comparePassword = async function(candidatePassword) {
+  try {
+    return await bcrypt.compare(candidatePassword, this.password);
+  } catch (error) {
+    throw new Error('Error comparing passwords');
+  }
+};
 
 // hashPassword middleware
 patientSchema.plugin(hashPassword, { saltRounds: 12 });

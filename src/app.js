@@ -10,6 +10,7 @@ const MedicalCentre = require('./models/medicalCentre');
 const Specialty = require('./models/specialty');
 
 // Import all routers
+const authRouter = require('./routes/authRoutes');
 const patientRouter = require('./routes/patientRoutes');
 const medicalCentreRouter = require('./routes/medicalCentreRoutes');
 const specialtyRouter = require('./routes/specialtyRoutes');
@@ -26,7 +27,7 @@ app.use(express.json());
 
 // Configure CORS
 const corsOptions = {
-  origin: ['http://localhost:3000', 'http://localhost:5173', 'https://deployedApp.com'],
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
@@ -205,6 +206,7 @@ app.get('/', (req, res) => {
 // }));
 
 // Router handlers
+app.use('/auth', authRouter);
 app.use('/patients', patientRouter);
 app.use('/medicalCentres', medicalCentreRouter);
 app.use('/specialties', specialtyRouter);

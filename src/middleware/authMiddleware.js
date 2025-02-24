@@ -1,13 +1,16 @@
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 function auth(req, res, next) {
-  // Get authorization header from request
-  const authHeader = req.headers.authorization;
+  try {
+    // Get authorization header from request
+    const authHeader = req.headers.authorization;
 
-  // Check authorization header is present, if not, throw 401 error
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Access denied. No token provided.' });
-  }
+    // Check authorization header is present, if not, throw 401 error
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ 
+        error: 'Authentication failed. No token provided.' });
+    }
 
   // Extract second element in token
   const token = authHeader.split(' ')[1];
@@ -18,8 +21,20 @@ function auth(req, res, next) {
     req.patient = decoded;
     next();
   } catch (err) {
-    return res.status(400).json({ error: 'Invalid token.' });
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ 
+        error: 'Token has expired. Please log in again.' 
+      });
+    }
+    return res.status(401).json({ 
+      error: 'Authentication failed - Invalid token' 
+    });
   }
+} catch (error) {
+  return res.status(500).json({ 
+    error: 'Internal server error during authentication' 
+  });
+}
 };
 
 module.exports = auth;

@@ -1,80 +1,103 @@
 const express = require('express');
-const {
-  getMedicalCentres,
-  getMedicalCentre,
-  createMedicalCentre,
-  updateMedicalCentre,
-  deleteMedicalCentre,
-} = require('../controllers/medicalCentreController');
-
-const errorHandler = require('../middleware/errorHandler');
-
 const medicalCentreRouter = express.Router();
+const MedicalCentre = require('../models/medicalCentre');
+const auth = require('../middleware/authMiddleware');
 
-// GET all medical centres - http://localhost:3000/medicalCentres
-medicalCentreRouter.get('/', errorHandler(async (req, res) => {
-  const medicalCentres = await getMedicalCentres();
-  res.status(200).json(medicalCentres);
-}));
+// Validation middleware
+const validateMedicalCentreData = (req, res, next) => {
+  const { medicalCentreName, operatingHours, address, contacts } = req.body;
+  const errors = [];
 
-// GET a single medical centre - http://localhost:3000/medicalCentres/_id
-medicalCentreRouter.get('/:medicalCentreId', errorHandler(async (req, res) => {
-  const medicalCentre = await getMedicalCentre(req.params.medicalCentreId);
-  if (!medicalCentre) {
-    res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+  if (!medicalCentreName?.trim()) {
+    errors.push('Medical centre name is required');
   }
-  res.status(200).json(medicalCentre);
-}));
+  if (!operatingHours?.trim()) {
+    errors.push('Operating hours are required');
+  }
+  if (!address?.street?.trim() || !address?.city?.trim()) {
+    errors.push('Complete address is required');
+  }
+  if (!contacts?.email?.trim() || !contacts?.phone?.trim()) {
+    errors.push('Complete contact details are required');
+  }
 
-// CREATE new medical centre - http://localhost:3000/medicalCentres
-medicalCentreRouter.post('/', errorHandler(async (req, res) => {
-  const bodyData = {
-    medicalCentreName: req.body.medicalCentreName,
-    operatingHours: req.body.operatingHours,
-    address: {
-      street: req.body.address.street,
-      city: req.body.address.city,
-    },
-    contacts: {
-      email: req.body.contacts.email,
-      phone: req.body.contacts.phone,
-    },
-  };
-  const newMedicalCentre = await createMedicalCentre(bodyData);
-  res.status(201).json(newMedicalCentre);
-}));
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
+  next();
+};
 
-// PATCH update medical centre - http://localhost:3000/medicalCentres/_id
-medicalCentreRouter.patch('/:medicalCentreId', errorHandler(async (req, res) => {
-  const bodyData = {
-    medicalCentreName: req.body.medicalCentreName,
-    operatingHours: req.body.operatingHours,
-    address: {
-      street: req.body.address.street,
-      city: req.body.address.city,
-    },
-    contacts: {
-      email: req.body.contacts.email,
-      phone: req.body.contacts.phone,
-    },
-  };
-  const updatedMedicalCentre = await updateMedicalCentre(req.params.medicalCentreId, bodyData);
-  if (!updatedMedicalCentre) {
-    res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
-  } else if (updatedMedicalCentre.error) {
-    res.status(403).json(updatedMedicalCentre);
-  } else {
+// Don't need to log in
+// GET all medical centres
+medicalCentreRouter.get('/', async (req, res) => {
+  try {
+    const medicalCentres = await MedicalCentre.find().sort({ medicalCentreName: 1 });
+    res.status(200).json(medicalCentres);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET one medical centre
+medicalCentreRouter.get('/:medicalCentreId', async (req, res) => {
+  try {
+    const medicalCentre = await MedicalCentre.findById(req.params.medicalCentreId);
+    if (!medicalCentre) {
+      return res.status(404).json({ error: 'Medical centre not found' });
+    }
+    res.status(200).json(medicalCentre);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Need to log in to create, update and delete
+// CREATE medical centre
+medicalCentreRouter.post('/', auth, validateMedicalCentreData, async (req, res) => {
+  try {
+    const newMedicalCentre = await MedicalCentre.create(req.body);
+    res.status(201).json(newMedicalCentre);
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(409).json({ error: 'Email already exists' });
+    } else {
+      res.status(400).json({ error: error.message });
+    }
+  }
+});
+
+// UPDATE medical centre
+medicalCentreRouter.patch('/:medicalCentreId', auth, validateMedicalCentreData, async (req, res) => {
+  try {
+    const updatedMedicalCentre = await MedicalCentre.findByIdAndUpdate(
+      req.params.medicalCentreId,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedMedicalCentre) {
+      return res.status(404).json({ error: 'Medical centre not found' });
+    }
+
     res.status(200).json(updatedMedicalCentre);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-}));
+});
 
-// DELETE medical centre - http://localhost:3000/medicalCentres/_id
-medicalCentreRouter.delete('/:medicalCentreId', errorHandler(async (req, res) => {
-  const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
-  if (!deletedMedicalCentre) {
-    res.status(404).json({ error: `Medical centre with id ${req.params.medicalCentreId} not found` });
+// DELETE medical centre
+medicalCentreRouter.delete('/:medicalCentreId', auth, async (req, res) => {
+  try {
+    const deletedMedicalCentre = await MedicalCentre.findByIdAndDelete(req.params.medicalCentreId);
+    
+    if (!deletedMedicalCentre) {
+      return res.status(404).json({ error: 'Medical centre not found' });
+    }
+
+    res.status(200).json(deletedMedicalCentre);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-  res.status(200).json(deletedMedicalCentre);
-}));
+});
 
 module.exports = medicalCentreRouter;
