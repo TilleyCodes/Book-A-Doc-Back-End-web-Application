@@ -22,7 +22,7 @@ const doctorAvailabilityRouter = require('./routes/doctorAvailabilityRoutes');
 
 const app = express();
 
-// Middleware
+// Middleware, allow JSON body data request
 app.use(express.json());
 
 // Configure CORS

@@ -4,9 +4,9 @@ require('dotenv').config();
 function auth(req, res, next) {
   try {
     // Get authorization header from request
-    const authHeader = req.headers.authorization;
+    const authHeader = req.headers.authorisation;
 
-    // Check authorization header is present, if not, throw 401 error
+    // Check authorisation header is present, if not, throw 401 error
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return res.status(401).json({ 
         error: 'Authentication failed. No token provided.' });
@@ -20,7 +20,7 @@ function auth(req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret' );
     req.patient = decoded;
     next();
-  } catch (err) {
+  } catch (error) {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({ 
         error: 'Token has expired. Please log in again.' 
