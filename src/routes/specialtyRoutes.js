@@ -11,6 +11,7 @@ const auth = require('../middleware/authMiddleware');
 
 const specialtyRouter = express.Router();
 
+// Validation middleware
 const validateSpecialtyData = (req, res, next) => {
   const { specialtyName, description } = req.body;
   const errors = [];

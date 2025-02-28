@@ -5,6 +5,7 @@ const specialtySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Specialty name is required'],
     unique: true,
+    trim: true,
   },
   description: {
     type: String,
