@@ -3,7 +3,7 @@ require('dotenv').config();
 
 function auth(req, res, next) {
   try {
-    // Get authorization header from request
+    // Get authorisation header from request
     const authHeader = req.headers.authorisation;
 
     // Check authorisation header is present, if not, throw 401 error
@@ -14,32 +14,32 @@ function auth(req, res, next) {
       });
     }
 
-  // Extract second element in token
-  const token = authHeader.split(' ')[1];
+    // Extract second element in token
+    const token = authHeader.split(' ')[1];
 
-  // Attempt token verification and make payload available to next function
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
-    req.patient = decoded;
-    next();
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
+    // Attempt token verification and make payload available to next function
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
+      req.patient = decoded;
+      next();
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ 
+          status: 'error',
+          message: 'Token has expired. Please log in again.' 
+        });
+      }
       return res.status(401).json({ 
         status: 'error',
-        message: 'Token has expired. Please log in again.' 
+        message: 'Authentication failed - Invalid token' 
       });
     }
-    return res.status(401).json({ 
+  } catch (error) {
+    return res.status(500).json({ 
       status: 'error',
-      message: 'Authentication failed - Invalid token' 
+      message: 'Internal server error during authentication' 
     });
   }
-} catch (error) {
-  return res.status(500).json({ 
-    status: 'error',
-    message: 'Internal server error during authentication' 
-  });
-}
 }
 
 module.exports = auth;

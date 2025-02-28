@@ -217,7 +217,7 @@ app.use('/bookings', bookingRouter);
 app.use('/doctorAvailabilities', doctorAvailabilityRouter);
 
 // 404 Handler
-app.get((req, res) => {
+app.use((req, res) => {
   res.status(404).json({
     status: 'error',
     message: 'Page not found.',
