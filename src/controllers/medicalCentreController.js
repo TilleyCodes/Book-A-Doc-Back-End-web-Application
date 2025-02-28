@@ -43,7 +43,6 @@ async function updateMedicalCentre(id, data) {
     error.status = 404;
     throw error;
   }
-
   return updatedMedicalCentre;
 }
 
@@ -56,7 +55,6 @@ async function deleteMedicalCentre(id) {
     error.status = 404;
     throw error;
   }
-
   return deletedMedicalCentre;
 }
 

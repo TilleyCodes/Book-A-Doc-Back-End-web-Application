@@ -6,10 +6,27 @@ const {
   updateSpecialty,
   deleteSpecialty,
 } = require('../controllers/specialtyController');
-
 const errorHandler = require('../middleware/errorHandler');
+const auth = require('../middleware/authMiddleware');
 
 const specialtyRouter = express.Router();
+
+const validateSpecialtyData = (req, res, next) => {
+  const { specialtyName, description } = req.body;
+  const errors = [];
+
+  if (!specialtyName?.trim()) {
+    errors.push('Specialty name is required');
+  }
+  if (!description?.trim()) {
+    errors.push('Description is required');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
+  return next();
+};
 
 // GET all specialties - http://localhost:3000/specialties
 specialtyRouter.get('/', errorHandler(async (req, res) => {
@@ -27,7 +44,7 @@ specialtyRouter.get('/:specialtyId', errorHandler(async (req, res) => {
 }));
 
 // CREATE new specialty - http://localhost:3000/specialties
-specialtyRouter.post('/', errorHandler(async (req, res) => {
+specialtyRouter.post('/', auth, validateSpecialtyData, errorHandler(async (req, res) => {
   const bodyData = {
     specialtyName: req.body.specialtyName,
     description: req.body.description,
@@ -37,28 +54,19 @@ specialtyRouter.post('/', errorHandler(async (req, res) => {
 }));
 
 // PATCH update specialty - http://localhost:3000/specialties/_id
-specialtyRouter.patch('/:specialtyId', async (req, res) => {
+specialtyRouter.patch('/:specialtyId', auth, validateSpecialtyData, errorHandler(async (req, res) => {
   const bodyData = {
     specialtyName: req.body.specialtyName,
     description: req.body.description,
   };
   const updatedSpecialty = await updateSpecialty(req.params.specialtyId, bodyData);
-  if (!updatedSpecialty) {
-    res.status(404).json({ error: `Specialty with id ${req.params.specialtyId} not found` });
-  } else if (updatedSpecialty.error) {
-    res.status(403).json(updatedSpecialty);
-  } else {
-    res.status(200).json(updatedSpecialty);
-  }
-});
+  res.status(200).json(updatedSpecialty);
+}));
 
 // DELETE specialty - http://localhost:3000/specialties/_id
-specialtyRouter.delete('/:specialtyId', async (req, res) => {
+specialtyRouter.delete('/:specialtyId', auth, errorHandler(async (req, res) => {
   const deletedSpecialty = await deleteSpecialty(req.params.specialtyId);
-  if (!deletedSpecialty) {
-    res.status(404).json({ error: `Specialty with id ${req.params.specialtyId} not found` });
-  }
   res.status(200).json(deletedSpecialty);
-});
+}));
 
 module.exports = specialtyRouter;

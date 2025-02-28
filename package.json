@@ -11,9 +11,9 @@
     "fetchP": "node src/utils/fetchPatient.js",
     "fetchA": "node src/utils/fetchAvailability.js",
     "fetchMC": "node src/utils/fetchMedicalCentres.js",
-    "fetchS": "node src/ultis/fetchSpecialty.js",
-    "fetchD": "node src/ultis/fetchDoctor.js",
-    "fetchDC": "node src/ultis/fetchDoctorCentre.js",
+    "fetchS": "node src/utils/fetchSpecialty.js",
+    "fetchD": "node src/utils/fetchDoctor.js",
+    "fetchDC": "node src/utils/fetchDoctorCentre.js",
     "fetchB": "node src/utils/fetchBookings.js",
     "fetchDA": "node src/utils/fetchDoctorAvailability.js"
   },

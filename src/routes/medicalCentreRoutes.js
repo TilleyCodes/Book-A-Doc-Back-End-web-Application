@@ -1,7 +1,15 @@
 const express = require('express');
-const medicalCentreRouter = express.Router();
-const MedicalCentre = require('../models/medicalCentre');
+const {
+  getMedicalCentres,
+  getMedicalCentre,
+  createMedicalCentre,
+  updateMedicalCentre,
+  deleteMedicalCentre,
+} = require('../controllers/medicalCentreController');
+const errorHandler = require('../middleware/errorHandler');
 const auth = require('../middleware/authMiddleware');
+
+const medicalCentreRouter = express.Router();
 
 // Validation middleware
 const validateMedicalCentreData = (req, res, next) => {
@@ -24,80 +32,42 @@ const validateMedicalCentreData = (req, res, next) => {
   if (errors.length > 0) {
     return res.status(400).json({ errors });
   }
-  next();
+  return next();
 };
 
 // Don't need to log in
 // GET all medical centres
-medicalCentreRouter.get('/', async (req, res) => {
-  try {
-    const medicalCentres = await MedicalCentre.find().sort({ medicalCentreName: 1 });
-    res.status(200).json(medicalCentres);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+medicalCentreRouter.get('/', errorHandler(async (req, res) => {
+  const medicalCentres = await getMedicalCentres();
+  res.status(200).json(medicalCentres);
+}));
 
 // GET one medical centre
-medicalCentreRouter.get('/:medicalCentreId', async (req, res) => {
-  try {
-    const medicalCentre = await MedicalCentre.findById(req.params.medicalCentreId);
-    if (!medicalCentre) {
-      return res.status(404).json({ error: 'Medical centre not found' });
-    }
-    res.status(200).json(medicalCentre);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+medicalCentreRouter.get('/:medicalCentreId', errorHandler(async (req, res) => {
+  const medicalCentre = await getMedicalCentre(req.params.medicalCentreId);
+  res.status(200).json(medicalCentre);
+}));
 
 // Need to log in to create, update and delete
 // CREATE medical centre
-medicalCentreRouter.post('/', auth, validateMedicalCentreData, async (req, res) => {
-  try {
-    const newMedicalCentre = await MedicalCentre.create(req.body);
+medicalCentreRouter.post('/', auth, validateMedicalCentreData, errorHandler(async (req, res) => {
+  const newMedicalCentre = await createMedicalCentre(req.body);
     res.status(201).json(newMedicalCentre);
-  } catch (error) {
-    if (error.code === 11000) {
-      res.status(409).json({ error: 'Email already exists' });
-    } else {
-      res.status(400).json({ error: error.message });
-    }
-  }
-});
+  })
+);
 
-// UPDATE medical centre
-medicalCentreRouter.patch('/:medicalCentreId', auth, validateMedicalCentreData, async (req, res) => {
-  try {
-    const updatedMedicalCentre = await MedicalCentre.findByIdAndUpdate(
-      req.params.medicalCentreId,
-      req.body,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedMedicalCentre) {
-      return res.status(404).json({ error: 'Medical centre not found' });
-    }
-
-    res.status(200).json(updatedMedicalCentre);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-});
+// PATCH update medical centre
+medicalCentreRouter.patch('/:medicalCentreId', auth, validateMedicalCentreData, errorHandler(async (req, res) => {
+  const updatedMedicalCentre = await updateMedicalCentre(req.params.medicalCentreId,req.body);
+  res.status(200).json(updatedMedicalCentre);
+  })
+);
 
 // DELETE medical centre
-medicalCentreRouter.delete('/:medicalCentreId', auth, async (req, res) => {
-  try {
-    const deletedMedicalCentre = await MedicalCentre.findByIdAndDelete(req.params.medicalCentreId);
-    
-    if (!deletedMedicalCentre) {
-      return res.status(404).json({ error: 'Medical centre not found' });
-    }
-
+medicalCentreRouter.delete('/:medicalCentreId', auth, errorHandler(async (req, res) => {
+  const deletedMedicalCentre = await deleteMedicalCentre(req.params.medicalCentreId);
     res.status(200).json(deletedMedicalCentre);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+  })
+);
 
 module.exports = medicalCentreRouter;
