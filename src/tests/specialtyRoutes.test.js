@@ -1,132 +1,130 @@
 const request = require('supertest');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
-const Specialty = require('../models/specialty');
 
-const sampleSpecialtyData = [
-  {
-    _id: '67b6927a4644d8903cd58015',
-    specialtyName: "GP Women's Health",
-    description: "Specialised care in women's health including reproductive health, pregnancy care, and menopause management.",
-    __v: 0,
-  },
-  {
-    _id: '67b6927a4644d8903cd58016',
-    specialtyName: "GP Men's Health",
-    description: 'Focused on male-specific health issues including prostate health and testosterone management.',
-    __v: 0,
-  },
-  {
-    _id: '67b6927a4644d8903cd58017',
-    specialtyName: 'GP Skin Checks',
-    description: 'Comprehensive skin examinations and early detection of skin cancers.',
-    __v: 0,
-  },
-];
+describe('Specialty Routes', () => {
+  let mongoServer;
+  let authToken;
+  let testSpecialty;
 
-describe('Specialty Routes testing', () => {
-  test('GET ALL | should return all specialties', async () => {
-    Specialty.find = jest.fn().mockResolvedValue(sampleSpecialtyData);
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-    const response = await request(app).get('/specialties');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(3);
-    expect(Specialty.find).toHaveBeenCalledTimes(1);
-  });
-
-  test('GET ALL | should return empty array with a 200 status', async () => {
-    const emptyArray = [];
-    Specialty.find = jest.fn().mockResolvedValue(emptyArray);
-
-    const response = await request(app).get('/specialties');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
-  });
-
-  test('GET ONE | should return one specialty by id', async () => {
-    Specialty.findById = jest.fn().mockResolvedValue(sampleSpecialtyData[0]);
-
-    const response = await request(app)
-      .get('/specialties/67b6927a4644d8903cd58015');
-
-    expect(response.status).toBe(200);
-    expect(response.body.specialtyName).toBe("GP Women's Health");
-  });
-
-  test('GET ONE | should return 404 for non-existent id', async () => {
-    Specialty.findById = jest.fn().mockResolvedValue(null);
-
-    const response = await request(app)
-      .get('/specialties/67b6927a4644d8903cd58999');
-
-    expect(response.status).toBe(404);
-  });
-
-  test('POST | should create a new specialty', async () => {
-    const newSpecialty = {
-      specialtyName: 'GP Travel Medicine',
-      description: 'Provides travel vaccinations and health advice for international travelers.',
+    // Create a test patient for auth token
+    const patientData = {
+      firstName: "Admin",
+      lastName: "User",
+      email: "admin.specialty@emailcom",
+      dateOfBirth: "1990-01-01T00:00:00.000Z",
+      address: { street: "1 Spec St", city: "Special Town" },
+      phoneNumber: "9877 5566",
+      password: "SpecialtyPassword123"
     };
 
-    Specialty.create = jest.fn().mockResolvedValue({
-      _id: '67b6927a4644d8903cd58020',
-      ...newSpecialty,
-    });
+    await request(app).post('/patients').send(patientData);
+    
+    const loginRes = await request(app)
+      .post('/patients/login')
+      .send({ email: patientData.email, password: patientData.password });
+      
+    authToken = loginRes.body.token;
+  });
 
-    const response = await request(app)
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+
+  // Test get all specialty
+  test('GET /specialties should return all specialties', async () => {
+    const res = await request(app).get('/specialties');
+    
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+
+  // Test get a specialty by id
+  test('GET /specialties/:id should return a specific specialty', async () => {
+    const res = await request(app).get(`/specialties/${testSpecialty._id}`);
+    
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('specialtyName', testSpecialty.specialtyName);
+  });
+
+  // Test get an invalid specialty
+  test('GET /specialties/:id should return 404 for non-existent id', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app).get(`/specialties/${fakeId}`);
+    
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('status', 'error');
+  });
+  
+  // Test create specialty
+  test('POST /specialties should create a new specialty', async () => {
+    const specialtyData = {
+      specialtyName: 'Test Specialty',
+      description: 'Description for test specialty'
+    };
+    
+    const res = await request(app)
       .post('/specialties')
-      .send(newSpecialty);
-
-    expect(response.status).toBe(201);
-    expect(response.body.specialtyName).toBe(newSpecialty.specialtyName);
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(specialtyData);
+      
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('specialtyName', specialtyData.specialtyName);
+    testSpecialty = res.body;
   });
 
-  test('PATCH | should update a specialty', async () => {
+  // Test update specialty
+  test('PATCH /specialties/:id should update a specialty', async () => {
     const updateData = {
-      specialtyName: 'Updated Specialty Name',
-      description: 'Updated description',
+      specialtyName: 'Updated Specialty',
+      description: 'Updated specialty description'
     };
-
-    Specialty.findByIdAndUpdate = jest.fn().mockResolvedValue({
-      _id: '67b6927a4644d8903cd58015',
-      ...updateData,
-    });
-
-    const response = await request(app)
-      .patch('/specialties/67b6927a4644d8903cd58015')
+    
+    const res = await request(app)
+      .patch(`/specialties/${testSpecialty._id}`)
+      .set('Authorization', `Bearer ${authToken}`)
       .send(updateData);
-
-    expect(response.status).toBe(200);
-    expect(response.body.specialtyName).toBe(updateData.specialtyName);
+      
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('specialtyName', updateData.specialtyName);
   });
 
-  test('PATCH | should return 404 for non-existent specialty', async () => {
-    Specialty.findByIdAndUpdate = jest.fn().mockResolvedValue(null);
-
-    const response = await request(app)
-      .patch('/specialties/67b6927a4644d8903cd58999')
-      .send({ specialtyName: 'Test Update' });
-
-    expect(response.status).toBe(404);
+  // Test update invalid specialty
+  test('PATCH /specialties/:id should return 404 for non-existent specialty', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const updateData = {
+      specialtyName: 'Non-existent Specialty',
+      description: 'This specialty does not exist'
+    };
+    
+    const res = await request(app)
+      .patch(`/specialties/${fakeId}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(updateData);
+      
+    expect(res.status).toBe(404);
+    expect(res.body).toHaveProperty('status', 'error');
   });
 
-  test('DELETE | should delete a specialty', async () => {
-    Specialty.findByIdAndDelete = jest.fn().mockResolvedValue(sampleSpecialtyData[0]);
-
-    const response = await request(app)
-      .delete('/specialties/67b6927a4644d8903cd58015');
-
-    expect(response.status).toBe(200);
-    expect(response.body.specialtyName).toBe(sampleSpecialtyData[0].specialtyName);
-  });
-
-  test('DELETE | should return 404 for non-existent specialty', async () => {
-    Specialty.findByIdAndDelete = jest.fn().mockResolvedValue(null);
-
-    const response = await request(app)
-      .delete('/specialties/67b6927a4644d8903cd58999');
-
-    expect(response.status).toBe(404);
+  // Test delete specialty
+  test('DELETE /specialties/:id should delete a specialty', async () => {
+    const res = await request(app)
+      .delete(`/specialties/${testSpecialty._id}`)
+      .set('Authorization', `Bearer ${authToken}`);
+      
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('specialtyName', testSpecialty.specialtyName);
+    
+    // Verify it's deleted
+    const getRes = await request(app).get(`/specialties/${testSpecialty._id}`);
+    expect(getRes.status).toBe(404);
   });
 });

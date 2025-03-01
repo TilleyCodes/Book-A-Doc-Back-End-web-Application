@@ -1,6 +1,6 @@
-/* eslint-disable no-underscore-dangle */
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const hashPasswordPlugin = require('../middleware/hashPassword');
 
 // Create user model for test
@@ -17,18 +17,27 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(hashPasswordPlugin, { saltRounds: 10 });
 
-const User = mongoose.model('User', userSchema);
-
 // Mock bcrypt
 jest.mock('bcrypt');
 
 // Tests for hashPassword function
 describe('hashPassword plugin', () => {
+  let mongoServer;
+  let User;
+
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost:27017/test_db');
+    // Create MongoDB Memory Server
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    
+    // Create the model after connection
+    User = mongoose.model('User', userSchema);
   });
+  
   afterAll(async () => {
-    await mongoose.connection.close();
+    await mongoose.disconnect();
+    await mongoServer.stop();
     jest.clearAllMocks();
   });
 
@@ -67,7 +76,7 @@ describe('hashPassword plugin', () => {
     expect(user.password).toBe('firstHash');
   });
 
-  test('Should call next(error) if bcrypt.hash failes', async () => {
+  test('Should call next(error) if bcrypt.hash fails', async () => {
     const testError = new Error('bcrypt error');
     bcrypt.hash.mockRejectedValue(testError);
 

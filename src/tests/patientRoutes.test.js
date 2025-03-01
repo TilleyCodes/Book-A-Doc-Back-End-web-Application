@@ -1,184 +1,161 @@
-/* eslint-disable no-underscore-dangle */
 const request = require('supertest');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
-const Patient = require('../models/patient');
 
-const samplePatientData = [
-  {
-    _id: '67b6927a4644d8903cd58015',
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@example.com',
-    dateOfBirth: '2000-01-01',
-    address: {
-      street: '123 Main St',
-      city: 'Anytown',
-    },
-    phoneNumber: '0400 928 882',
-    password: 'password123',
-    __v: 0,
-  },
-  {
-    _id: '67b6927a4644d8903cd58016',
-    firstName: 'Jane',
-    lastName: 'Smith',
-    email: 'jane.smith@example.com',
-    dateOfBirth: '1985-07-15T00:00:00.000Z',
-    address: {
-      street: '456 High St',
-      city: 'Sampletown',
-    },
-    phoneNumber: '0400 345 678',
-    password: 'mypassword789',
-    __v: 0,
-  },
-  {
-    _id: '67b6927a4644d8903cd58017',
-    firstName: 'Mike',
-    lastName: 'Johnson',
-    email: 'mike.johnson@example.com',
-    dateOfBirth: '1988-11-20T00:00:00.000Z',
-    address: {
-      street: '789 Pine Rd',
-      city: 'Exampleville',
-    },
-    phoneNumber: '0400 888 999',
-    password: 'securepass567',
-    __v: 0,
-  },
-  {
-    _id: '67b6927a4644d8903cd58018',
-    firstName: 'Emily',
-    lastName: 'Davis',
-    email: 'emily.davis@example.com',
-    dateOfBirth: '1975-04-10T00:00:00.000Z',
-    address: {
-      street: '42 Elm St',
-      city: 'Anothercity',
-    },
-    phoneNumber: '0400 111 222',
-    password: 'longpassword999',
-    __v: 0,
-  },
-];
+describe('Patient Routes', () => {
+  let mongoServer;
+  let testPatient;
+  let authToken;
 
-describe('Patients GET validation tests', () => {
-  test('GET ALL | All patients should be over 18 years of age', async () => {
-    Patient.find = jest.fn().mockResolvedValue(samplePatientData);
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const uri = mongoServer.getUri();
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+  });
 
-    // Make a GET request to /patients
-    const response = await request(app).get('/patients');
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
 
-    expect(response.status).toBe(200);
+  // Test create patient
+  test('POST /patients should create a new patient', async () => {
+    const patientData = {
+      firstName: "Test",
+      lastName: "Patient",
+      email: "test.patient@email.com",
+      dateOfBirth: "1990-01-01T00:00:00.000Z",
+      address: { street: "8 Test St", city: "Test Town" },
+      phoneNumber: "9878 2233",
+      password: "TestPassword1234"
+    };
+    
+    const res = await request(app)
+      .post('/patients')
+      .send(patientData);
+      
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('token');
+    expect(res.body.newPatient).toHaveProperty('firstName', patientData.firstName);
+    testPatient = res.body.newPatient;
+    
+    // Login to get auth token
+    const loginRes = await request(app)
+      .post('/patients/login')
+      .send({ email: patientData.email, password: patientData.password });
+      
+    authToken = loginRes.body.token;
+  });
 
-    // Loop through all objects and test if dateOfBirth is >= 18 years
-    response.body.forEach((patient) => {
+  // Test patient login auth
+  test('POST /patients/login should authenticate a patient', async () => {
+    const loginData = {
+      email: "test.patient@email.com",
+      password: "TestPassword1234"
+    };
+    
+    const res = await request(app)
+      .post('/patients/login')
+      .send(loginData);
+      
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('token');
+    expect(res.body).toHaveProperty('status', 'success');
+  });
+
+  // Test login error for invalid patient password
+  test('POST /patients/login should return 401 for wrong password', async () => {
+    const loginData = {
+      email: "test.patient@email.com",
+      password: "Password124"
+    };
+    
+    const res = await request(app)
+      .post('/patients/login')
+      .send(loginData);
+      
+    expect(res.status).toBe(401);
+    expect(res.body).toHaveProperty('status', 'error');
+  });
+
+  // Test get all Patients
+  test('GET /patients should return all patients', async () => {
+    const res = await request(app).get('/patients');
+    
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBeTruthy();
+    expect(res.body.length).toBeGreaterThan(0);
+    
+    // Validate age requirement must be 18 or over
+    res.body.forEach(patient => {
       const dob = new Date(patient.dateOfBirth);
-      const diffMs = Date.now() - dob.getTime(); // Difference in milliseconds
-      const ageDate = new Date(diffMs); // epoch start + diff = age in date form
-      const age = Math.abs(ageDate.getUTCFullYear() - 1970); // years since 1970
-
+      const diffMs = Date.now() - dob.getTime();
+      const ageDate = new Date(diffMs);
+      const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+      
       expect(age).toBeGreaterThanOrEqual(18);
     });
   });
 
-  // Test for GET ONE route
-  // Ensure only one object is returned
-  test('GET ONE | should return only one object from sample of three and fname to be Liam', async () => {
-    Patient.find = jest.fn().mockResolvedValue(samplePatientData);
-
-    // Make a GET request to /patients/:patientId
-    const response = await request(app).get('/patients/67b6927a4644d8903cd58016');
-
-    // Check for 200 response
-    // Check for only 1 object
-    // Check patients fname is Jane
-    expect(response.status).toBe(200);
-    expect(response.body).toHaveLength(1);
-    expect(response.body[0].firstName).toBe('Jane');
-  });
-
-  // Check for empty result
-  test('GET | Should return an empty array with a 200 status', async () => {
-    const emptyArray = [];
-    Patient.find = jest.fn().mockResolvedValue(emptyArray);
-    const response = await request(app).get('/patients');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
-  });
-});
-
-// New data for POST PATCH and DELETE testing
-const newPatientData = {
-  _id: '67b7ebde029b18de06ebc4c0',
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john.doe@example.com',
-  dateOfBirth: '1990-01-01T00:00:00.000Z',
-  address: {
-    street: '123 Main St',
-    city: 'Anytown',
-  },
-  phoneNumber: '0400 928 882',
-  password: 'password123',
-};
-
-// Patient POST route testing
-describe('Patient POST route testing', () => {
-  test('POST | Should create a new patient object', async () => {
-    Patient.create = jest.fn().mockResolvedValue(newPatientData);
-    const res = await request(app).post('/patients');
+  // Test get a single patient by id
+  test('GET /patients/:id should return a specific patient', async () => {
+    const res = await request(app).get(`/patients/${testPatient._id}`);
+    
     expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('firstName', testPatient.firstName);
   });
-});
 
-// Patient PATCH route testing
-describe('Patient PATCH route testing', () => {
-  test('PATCH | Updated object should return lastName Doey and status code of 200', async () => {
-    const updatedPatientData = {
-      firstName: 'John',
-      lastName: 'Doey',
-      email: 'john.doe@example.com',
-      dateOfBirth: '1990-01-01T00:00:00.000Z',
-      address: {
-        street: '123 Main St',
-        city: 'Anytown',
-      },
-      phoneNumber: '0400 928 882',
-      password: 'password123',
+  // test get patient profile with successful auth
+  test('GET /patients/profile should return patient profile when authenticated', async () => {
+    const res = await request(app)
+      .get('/patients/profile')
+      .set('Authorization', `Bearer ${authToken}`);
+      
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('firstName', testPatient.firstName);
+  });
+
+  // Test get patient profile with unsuccessful auth
+  test('GET /patients/profile should return 401 when not authenticated', async () => {
+    const res = await request(app).get('/patients/profile');
+    
+    expect(res.status).toBe(401);
+    expect(res.body).toHaveProperty('status', 'error');
+  });
+
+  // test update patient
+  test('PATCH /patients/:id should update a patient', async () => {
+    const updateData = {
+      firstName: "Updated",
+      lastName: "Patient",
+      email: "test.patient@email.com",
+      dateOfBirth: "1990-01-01T00:00:00.000Z",
+      address: { street: "5 Up St", city: "Dated" },
+      phoneNumber: "9934 6577",
+      password: "TestPassword1234"
     };
-    Patient.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedPatientData);
-    const res = await request(app).patch('/patients/:patientId');
-    expect(res.body.lastName).toBe('Doey');
+    
+    const res = await request(app)
+      .patch(`/patients/${testPatient._id}`)
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(updateData);
+      
     expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('firstName', updateData.firstName);
   });
 
-  test('PATCH | Expect 200 response after only one key value pair to be used in update.', async () => {
-    const updatedSinglePatientData = {
-      dateOfBirth: '1987-06-13',
-    };
-    Patient.findByIdAndUpdate = jest.fn().mockResolvedValue(updatedSinglePatientData);
-    const res = await request(app).patch('/patients/:patientId');
+  // Test Delete patient
+  test('DELETE /patients/:id should delete a patient', async () => {
+    const res = await request(app)
+      .delete(`/patients/${testPatient._id}`)
+      .set('Authorization', `Bearer ${authToken}`);
+      
     expect(res.status).toBe(200);
-    expect(res.body.dateOfBirth).toBe('1987-06-13');
-  });
-});
-
-// Patient DELETE route testing
-describe('Patient DELETE route testing', () => {
-  test('DELETE | Object should be deleted', async () => {
-    Patient.findByIdAndDelete = jest.fn().mockResolvedValue(newPatientData);
-    const res = await request(app).delete('/patients/:patientId');
-    expect(res.status).toBe(200);
-  });
-
-  // Give false id and test that delete function can handle it
-  test('DELETE | Should return 404 error for patient id that doesnt exist', async () => {
-    const falsePatientId = '68b8ebde029b18de06ebc4c0';
-    Patient.findByIdAndDelete = jest.fn().mockResolvedValue(null);
-    const res = await request(app).delete(`/patients/${falsePatientId}`);
-    expect(res.status).toBe(404);
-    expect(res.body).toHaveProperty('error');
-    expect(res.body.error).toMatch(new RegExp(falsePatientId));
+    expect(res.body).toHaveProperty('firstName', 'Updated');
+    
+    // Verify it's deleted
+    const getRes = await request(app).get(`/patients/${testPatient._id}`);
+    expect(getRes.status).toBe(404);
   });
 });

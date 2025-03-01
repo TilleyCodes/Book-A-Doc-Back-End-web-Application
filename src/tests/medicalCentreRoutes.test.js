@@ -1,6 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const MongoMemoryServer = require('mongodb-memory-server');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
 const Patient = require('../models/patient');
 
@@ -32,7 +32,7 @@ describe('Medical Centre Routes', () => {
       email: "admin@email.com",
       dateOfBirth: "1990-01-01T00:00:00.000Z",
       address: { street: "123 Admin St", city: "Adminville" },
-      phoneNumber: "1234567890",
+      phoneNumber: "9876 5432",
       password: "AdminPassword123"
     };
 
