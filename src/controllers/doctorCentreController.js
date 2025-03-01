@@ -40,7 +40,6 @@ async function updateDoctorCentre(id, data) {
   const updatedDoctorCentre = await DoctorCentre.findByIdAndUpdate(
     id,
     data,
-    options,
     { new: true, runValidators: true }
   );
 

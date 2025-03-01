@@ -30,7 +30,11 @@ const validateMedicalCentreData = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return res.status(400).json({ errors });
+    return res.status(400).json({ 
+      status: 'error',
+      message: 'Validation failed',
+      errors 
+    });
   }
   return next();
 };

@@ -2,7 +2,7 @@ const Availability = require('../models/availability');
 
 // GET ALL data from AvailabilityModel db
 async function getAvailabilities() {
-  const availabilities = await Availability.find().sort({ date: 1, startTime: 1 });;
+  const availabilities = await Availability.find().sort({ date: 1, startTime: 1 });
   return availabilities;
 }
 
