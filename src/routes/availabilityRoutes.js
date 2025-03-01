@@ -6,7 +6,7 @@ const {
   updateAvailability,
   deleteAvailability,
 } = require('../controllers/availabilityController');
-const errorHandler = require('../middleware/errorHandler');
+const { errorHandler } = require('../middleware/errorHandler');
 const auth = require('../middleware/authMiddleware');
 
 const availabilityRouter = express.Router();

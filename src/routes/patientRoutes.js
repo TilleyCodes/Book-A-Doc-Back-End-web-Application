@@ -7,7 +7,7 @@ const {
   deletePatient,
   loginPatient,
 } = require('../controllers/patientController');
-const errorHandler = require('../middleware/errorHandler');
+const { errorHandler } = require('../middleware/errorHandler');
 const auth = require('../middleware/authMiddleware');
 
 const patientRouter = express.Router();

@@ -6,7 +6,7 @@ const {
   updateDoctorCentre,
   deleteDoctorCentre,
 } = require('../controllers/doctorCentreController');
-const errorHandler = require('../middleware/errorHandler');
+const { errorHandler } = require('../middleware/errorHandler');
 const auth = require('../middleware/authMiddleware');
 
 const doctorCentreRouter = express.Router();

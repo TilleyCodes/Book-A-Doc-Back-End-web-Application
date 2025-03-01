@@ -6,7 +6,7 @@ const {
   updateSpecialty,
   deleteSpecialty,
 } = require('../controllers/specialtyController');
-const errorHandler = require('../middleware/errorHandler');
+const { errorHandler } = require('../middleware/errorHandler');
 const auth = require('../middleware/authMiddleware');
 
 const specialtyRouter = express.Router();
