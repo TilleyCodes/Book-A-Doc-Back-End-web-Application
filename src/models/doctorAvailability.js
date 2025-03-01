@@ -5,10 +5,12 @@ const doctorAvailabilitySchema = new mongoose.Schema({
   availabilityId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Availability',
+    required: [true, 'Availability ID is required'],
   },
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Doctor',
+    required: [true, 'Doctor ID is required'],
   },
 }, { timestamps: true });
 

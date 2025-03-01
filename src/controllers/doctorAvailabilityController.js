@@ -1,36 +1,65 @@
-const doctorAvailability = require('../models/doctorAvailability');
+const DoctorAvailability = require('../models/doctorAvailability');
 
 // GET ALL data from doctorAvailability db
 async function getDoctorAvailabilities() {
-  const drAvailabilities = await doctorAvailability.find();
-  return drAvailabilities;
+  const doctorAvailabilities = await DoctorAvailability.find()
+    .populate('doctorId', 'doctorName')
+    .populate('availabilityId', 'date startTime endTime isBooked')
+    .sort({ createdAt: -1 });
+  return doctorAvailabilities;
 }
 
 // GET ONE data from doctorAvailability db
 async function getDoctorAvailability(id) {
-  const drAvailability = await doctorAvailability.findById(id);
-  return drAvailability;
+  const doctorAvailability = await DoctorAvailability.findById(id)
+    .populate('doctorId', 'doctorName')
+    .populate('availabilityId', 'date startTime endTime isBooked');
+    
+  if (!doctorAvailability) {
+    const error = new Error(`Doctor availability with id ${id} not found`);
+    error.status = 404;
+    throw error;
+  }
+  return doctorAvailability;
 }
 
 // CREATE data from doctorAvailability db
 async function createDoctorAvailability(data) {
-  const newDoctorAvailability = await doctorAvailability.create(data);
-  return newDoctorAvailability;
+  try {
+    const newDoctorAvailability = await DoctorAvailability.create(data);
+    return newDoctorAvailability;
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      error.status = 400;
+    }
+    throw error;
+  }
 }
 
 // UPDATE data from doctorAvailability db
-async function updateDoctorAvailability(id, data, options = {}) {
-  const updatedDoctorAvailability = await doctorAvailability.findByIdAndUpdate(
+async function updateDoctorAvailability(id, data) {
+  const updatedDoctorAvailability = await DoctorAvailability.findByIdAndUpdate(
     id,
-    { $set: data }, // Allows partial update
-    options,
+    data,
+    { new: true, runValidators: true }
   );
+
+  if (!updatedDoctorAvailability) {
+    const error = new Error(`Doctor availability with id ${id} not found`);
+    error.status = 404;
+    throw error;
+  }
   return updatedDoctorAvailability;
 }
 
 // DELETE data from doctorAvailability db
 async function deleteDoctorAvailability(id) {
-  const deletedDoctorAvailability = await doctorAvailability.findByIdAndDelete(id);
+  const deletedDoctorAvailability = await DoctorAvailability.findByIdAndDelete(id);
+  if (!deletedDoctorAvailability) {
+    const error = new Error(`Doctor availability with id ${id} not found`);
+    error.status = 404;
+    throw error;
+  }
   return deletedDoctorAvailability;
 }
 
