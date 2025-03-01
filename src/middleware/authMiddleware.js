@@ -4,7 +4,7 @@ require('dotenv').config();
 function auth(req, res, next) {
   try {
     // Get authorisation header from request
-    const authHeader = req.headers.authorisation;
+    const authHeader = req.headers.authorization;
 
     // Check authorisation header is present, if not, throw 401 error
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

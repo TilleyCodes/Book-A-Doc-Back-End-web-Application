@@ -43,7 +43,7 @@ describe('Protected route /patients/profile', () => {
     test('Should return patient profile with valid token', async () => {
       const res = await request(app)
         .get('/patients/profile')
-        .set('Authorisation', `Bearer ${validToken}`);
+        .set('Authorization', `Bearer ${validToken}`);
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('_id');
     });

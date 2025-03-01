@@ -1,9 +1,4 @@
 const express = require('express');
-const auth = require('../middleware/authMiddleware');
-const Patient = require('../models/patient');
-
-const patientRouter = express.Router();
-
 const {
   getPatients,
   getPatient,
@@ -12,17 +7,55 @@ const {
   deletePatient,
   loginPatient,
 } = require('../controllers/patientController');
-
 const errorHandler = require('../middleware/errorHandler');
+const auth = require('../middleware/authMiddleware');
+
+const patientRouter = express.Router();
+
+// Validation middleware
+const validatePatientData = (req, res, next) => {
+  const { 
+    firstName, lastName, email, dateOfBirth, 
+    address, phoneNumber, password 
+  } = req.body;
+  const errors = [];
+
+  if (!firstName?.trim()) {
+    errors.push('First name is required');
+  }
+  if (!lastName?.trim()) {
+    errors.push('Last name is required');
+  }
+  if (!email?.trim()) {
+    errors.push('Email is required');
+  }
+  if (!dateOfBirth) {
+    errors.push('Date of birth is required');
+  }
+  if (!address?.street?.trim() || !address?.city?.trim()) {
+    errors.push('Complete address is required');
+  }
+  if (!phoneNumber?.trim()) {
+    errors.push('Phone number is required');
+  }
+  if (password && password.length < 10) {
+    errors.push('Password must be at least 10 characters long');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ 
+      status: 'error',
+      message: 'Validation failed',
+      errors 
+    });
+  }
+  return next();
+};
 
 // PROFILE route that's protected by auth
 patientRouter.get('/profile', auth, errorHandler(async (req, res) => {
-    // get req.patient which contains decoded token data from auth middleware
-    const patient = await Patient.findById(req.patient.id);
-    if (!patient) {
-        return res.status(404).json({ error: 'Patient not found' });
-    }
-    res.status(200).json(patient);
+  const patient = await getPatient(req.patient.id);
+  res.status(200).json(patient);
 }));
 
 // GET ALL | http://localhost:3000/patients
@@ -34,45 +67,44 @@ patientRouter.get('/', errorHandler(async (req, res) => {
 // GET ONE | http://localhost:3000/patients/patientId
 patientRouter.get('/:patientId', errorHandler(async (req, res) => {
   const patient = await getPatient(req.params.patientId);
-  if (!patient) {
-    res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
-  }
   res.status(200).json(patient);
 }));
 
 // CREATE | http://localhost:3000/patients
-patientRouter.post('/', errorHandler(async (req, res) => {
+patientRouter.post('/', validatePatientData, errorHandler(async (req, res) => {
   const result = await createPatient(req.body);
   res.status(201).json(result);
 }));
 
 // UPDATE | http://localhost:3000/patients/patient_id
-patientRouter.patch('/:patientId', errorHandler(async (req, res) => {
-  const { patientId } = req.params;
-  const updatedPatient = await updatePatient(patientId, req.body, {
-    new: true,
-    runValidators: true,
-  });
-  if (!updatedPatient) {
-    res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
-  }
+patientRouter.patch('/:patientId', auth, validatePatientData, errorHandler(async (req, res) => {
+  const updatedPatient = await updatePatient(req.params.patientId, req.body);
   res.status(200).json(updatedPatient);
 }));
 
 // DELETE | http://localhost:3000/patients/patient_id
-patientRouter.delete('/:patientId', errorHandler(async (req, res) => {
+patientRouter.delete('/:patientId', auth, errorHandler(async (req, res) => {
   const deletedPatient = await deletePatient(req.params.patientId);
-  if (!deletedPatient) {
-    res.status(404).json({ error: `Patient with id: ${req.params.patientId} does not exist` });
-  }
   res.status(200).json(deletedPatient);
 }));
 
 // LOGIN route for patients | http://localhost:3000/patients
 patientRouter.post('/login', errorHandler(async (req, res) => {
-    const { email, password } = req.body;
-    const { patient, token } = await loginPatient(email, password);
-    res.status(200).json({ patient, token });
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'Email and password are required'
+    });
+  }
+  
+  const { patient, token } = await loginPatient(email, password);
+  return res.status(200).json({
+    status: 'success',
+    patient,
+    token
+  });
 }));
 
 module.exports = patientRouter;
