@@ -1,6 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const MongoMemoryServer = require('mongodb-memory-server');
+const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
 
 describe('Patient Authentication', () => {
@@ -10,7 +10,7 @@ describe('Patient Authentication', () => {
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
-    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(uri);
 
     // Seed the database by creating dummy patient (registration)
     testPatient = {

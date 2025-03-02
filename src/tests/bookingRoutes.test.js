@@ -66,6 +66,21 @@ describe('Booking Routes', () => {
         isBooked: false
       });
     testAvailability = availabilityRes.body;
+
+   // Create a booking
+    const bookingData = {
+      patientId: testPatient._id,
+      doctorId: testDoctor._id,
+      availabilityId: testAvailability._id,
+      status: 'confirmed'
+    };
+  
+    const bookingRes = await request(app)
+      .post('/bookings')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(bookingData);
+    
+    testBooking = bookingRes.body;
   });
 
   afterAll(async () => {
@@ -101,7 +116,7 @@ describe('Booking Routes', () => {
       doctorId: testDoctor._id,
       availabilityId: testAvailability._id,
       status: 'confirmed'
-    };
+  };
     
     const res = await request(app)
       .post('/bookings')
@@ -116,7 +131,10 @@ describe('Booking Routes', () => {
   // test update booking by id
   test('PATCH /bookings/:id should update a booking', async () => {
     const updateData = {
-      status: 'cancelled'
+      status: 'cancelled',
+      patientId: testPatient._id,
+      doctorId: testDoctor._id,
+      availabilityId: testAvailability._id
     };
     
     const res = await request(app)

@@ -11,13 +11,13 @@ describe('Specialty Routes', () => {
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
-    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(uri);
 
     // Create a test patient for auth token
     const patientData = {
       firstName: "Admin",
       lastName: "User",
-      email: "admin.specialty@emailcom",
+      email: "admin.specialty@email.com",
       dateOfBirth: "1990-01-01T00:00:00.000Z",
       address: { street: "1 Spec St", city: "Special Town" },
       phoneNumber: "9877 5566",
@@ -31,6 +31,19 @@ describe('Specialty Routes', () => {
       .send({ email: patientData.email, password: patientData.password });
       
     authToken = loginRes.body.token;
+
+  // Create a test specialty first for all tests to use
+    const specialtyData = {
+      specialtyName: 'Initial Test Specialty',
+      description: 'Description for test specialty'
+    };
+    
+    const createRes = await request(app)
+      .post('/specialties')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(specialtyData);
+      
+    testSpecialty = createRes.body;
   });
 
   afterAll(async () => {
@@ -44,7 +57,7 @@ describe('Specialty Routes', () => {
     
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body)).toBeTruthy();
-    expect(res.body.length).toBeGreaterThan(0);
+    expect(res.body.length).toBeGreaterThan(0); // one specailty already created in beforeAll
   });
 
   // Test get a specialty by id
@@ -121,7 +134,7 @@ describe('Specialty Routes', () => {
       .set('Authorization', `Bearer ${authToken}`);
       
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('specialtyName', testSpecialty.specialtyName);
+    expect(res.body).toHaveProperty('specialtyName','Updated Specialty', testSpecialty.specialtyName);
     
     // Verify it's deleted
     const getRes = await request(app).get(`/specialties/${testSpecialty._id}`);

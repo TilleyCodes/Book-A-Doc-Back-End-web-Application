@@ -42,6 +42,18 @@ describe('Doctor Routes', () => {
         description: 'Description for doctor test specialty'
       });
     testSpecialty = specialtyRes.body;
+  
+    // Create a doctor
+    const doctorData = {
+      doctorName: 'Dr. Initial Test',
+      specialtyId: testSpecialty._id
+    };
+    
+    const doctorRes = await request(app)
+      .post('/doctors')
+      .send(doctorData);
+      
+    testDoctor = doctorRes.body;
   });
 
   afterAll(async () => {
@@ -49,6 +61,7 @@ describe('Doctor Routes', () => {
     await mongoServer.stop();
   });
 
+  // Test get all doctors
   test('GET /doctors should return all doctors', async () => {
     const res = await request(app).get('/doctors');
     
@@ -57,6 +70,7 @@ describe('Doctor Routes', () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 
+  // Test get a single doctor by id
   test('GET /doctors/:id should return a specific doctor', async () => {
     const res = await request(app).get(`/doctors/${testDoctor._id}`);
     
@@ -64,6 +78,7 @@ describe('Doctor Routes', () => {
     expect(res.body).toHaveProperty('doctorName', testDoctor.doctorName);
   });
 
+  // Test create doctor
   test('POST /doctors should create a new doctor', async () => {
     const doctorData = {
       doctorName: 'Dr. John Doe',
@@ -76,9 +91,9 @@ describe('Doctor Routes', () => {
       
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('doctorName', doctorData.doctorName);
-    testDoctor = res.body;
   });
 
+  // Test update doctor
   test('PATCH /doctors/:id should update a doctor', async () => {
     const updateData = {
       doctorName: 'Dr. Jane Doe',
@@ -94,6 +109,7 @@ describe('Doctor Routes', () => {
     expect(res.body).toHaveProperty('doctorName', updateData.doctorName);
   });
 
+  // test delete doctor
   test('DELETE /doctors/:id should delete a doctor', async () => {
     const res = await request(app)
       .delete(`/doctors/${testDoctor._id}`)

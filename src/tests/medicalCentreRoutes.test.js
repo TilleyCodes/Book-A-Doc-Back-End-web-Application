@@ -2,23 +2,11 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
-const Patient = require('../models/patient');
 
 describe('Medical Centre Routes', () => {
   let mongoServer;
   let authToken;
-  let testMedicalCentre = {
-    medicalCentreName: 'World Square Medical Centre',
-    operatingHours: '8am - 6pm',
-    address: {
-      street: '1 Shelley St',
-      city: 'Sydney',
-    },
-    contacts: {
-      email: 'worldsquaremc@email.com',
-      phone: '+61 39735 8466',
-    },
-  };
+  let testMedicalCentre;
 
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
@@ -50,6 +38,31 @@ describe('Medical Centre Routes', () => {
     await mongoServer.stop();
   });
 
+  // Test create medical centre
+  test('POST /medicalCentres should create a new medical centre', async () => {
+    const centreData = {
+      medicalCentreName: 'World Square Medical Centre',
+      operatingHours: '8am - 6pm',
+      address: {
+        street: '1 Shelley St',
+        city: 'Sydney',
+      },
+      contacts: {
+        email: 'worldsquaremc@email.com',
+        phone: '+61 39735 8466',
+      },
+    };
+    
+    const res = await request(app)
+      .post('/medicalCentres')
+      .set('Authorization', `Bearer ${authToken}`)
+      .send(centreData);
+      
+    expect(res.status).toBe(201);
+    expect(res.body).toHaveProperty('medicalCentreName', centreData.medicalCentreName);
+    testMedicalCentre = res.body;
+  });
+
   // Test get all Medical Centres
   test('GET ALL /medicalCentres should return all medical centres', async () => {
     const res = await request(app).get('/medicalCentres');
@@ -59,23 +72,11 @@ describe('Medical Centre Routes', () => {
 
   // Test get a single medical centre
   test('GET /medicalCentres/:id should return medical centre by id', async () => {
-    const res = await request(app).get(`/medicalCentres/${testMedicalCentre.id}`);
+    const res = await request(app).get(`/medicalCentres/${testMedicalCentre._id}`);
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('medicalCentreName', testMedicalCentre.medicalCentreName);
   });
   
-  // Test create medical centre
-  test('POST /medicalCentres should create a new medical centre', async () => {
-    const res = await request(app)
-      .post('/medicalCentres')
-      .set('Authorization', `Bearer ${authToken}`)
-      .send(testMedicalCentre);
-      
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty('medicalCentreName', testMedicalCentre.medicalCentreName);
-    testMedicalCentre.id = res.body._id;
-  });
-
   // Test update medical centre
   test('PATCH /medicalCentres/:id should update a specific medical centre', async () => {
     const updatedData = {
@@ -92,7 +93,7 @@ describe('Medical Centre Routes', () => {
     };
 
     const res = await request(app)
-      .patch(`/medicalCentres/${testMedicalCentre.id}`)
+      .patch(`/medicalCentres/${testMedicalCentre._id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedData);
       
@@ -103,13 +104,13 @@ describe('Medical Centre Routes', () => {
   // Test delete medical centre
   test('DELETE /medicalCentres/:id should delete a specific medical centre', async () => {
     const res = await request(app)
-      .delete(`/medicalCentres/${testMedicalCentre.id}`)
+      .delete(`/medicalCentres/${testMedicalCentre._id}`)
       .set('Authorization', `Bearer ${authToken}`);
       
     expect(res.status).toBe(200);
     
     // Verify it's deleted
-    const getRes = await request(app).get(`/medicalCentres/${testMedicalCentre.id}`);
+    const getRes = await request(app).get(`/medicalCentres/${testMedicalCentre._id}`);
     expect(getRes.status).toBe(404);
   });
 });

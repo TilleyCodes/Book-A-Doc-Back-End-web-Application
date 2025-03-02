@@ -29,7 +29,7 @@ describe('hashPassword plugin', () => {
     // Create MongoDB Memory Server
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
-    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    await mongoose.connect(uri);
     
     // Create the model after connection
     User = mongoose.model('User', userSchema);
