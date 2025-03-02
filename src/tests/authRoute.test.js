@@ -1,6 +1,5 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
 
@@ -70,7 +69,7 @@ describe('Patient Authentication', () => {
       .post('/patients/login')
       .send({ email: testPatient.email, password: testPatient.password });
 
-    const { token } = loginRes.body.token;
+    const token = loginRes.body.token;
 
     // Then access a route
     const res = await request(app)
