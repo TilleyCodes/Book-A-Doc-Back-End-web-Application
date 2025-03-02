@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 // app file for testing purposes only
 const express = require('express');
 const cors = require('cors');
