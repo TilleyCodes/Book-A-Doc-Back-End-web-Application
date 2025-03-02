@@ -35,7 +35,7 @@ async function updateDoctor(id, data) {
   const updatedDoctor = await Doctor.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedDoctor) {

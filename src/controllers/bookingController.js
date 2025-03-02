@@ -16,7 +16,7 @@ async function getBooking(id) {
     .populate('patientId', 'firstName lastName')
     .populate('doctorId', 'doctorName')
     .populate('availabilityId', 'date startTime endTime');
-    
+
   if (!booking) {
     const error = new Error(`Booking with id ${id} not found`);
     error.status = 404;
@@ -43,7 +43,7 @@ async function updateBooking(id, data) {
   const updatedBooking = await Booking.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedBooking) {

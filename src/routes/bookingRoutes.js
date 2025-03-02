@@ -13,7 +13,12 @@ const bookingRouter = express.Router();
 
 // Validate booking data middleware
 const validateBookingData = (req, res, next) => {
-  const { patientId, doctorId, availabilityId, status } = req.body;
+  const {
+    patientId,
+    doctorId,
+    availabilityId,
+    status,
+  } = req.body;
   const errors = [];
 
   if (!patientId) {
@@ -30,15 +35,14 @@ const validateBookingData = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors 
+      errors,
     });
   }
   return next();
 };
-
 
 // GET ALL | http://localhost:3000/bookings
 bookingRouter.get('/', auth, errorHandler(async (req, res) => {

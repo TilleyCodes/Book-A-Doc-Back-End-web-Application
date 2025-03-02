@@ -35,7 +35,7 @@ async function updateSpecialty(id, data = {}) {
   const updatedSpecialty = await Specialty.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedSpecialty) {

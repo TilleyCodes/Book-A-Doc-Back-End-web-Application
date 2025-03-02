@@ -10,12 +10,10 @@ async function fetchDoctorCentres() {
     const doctorCentres = await DoctorCentre.find({})
       .populate('doctorId', 'doctorName')
       .populate('medicalCentreId', 'medicalCentreName');
-    // eslint-disable-next-line no-console
     console.log('Doctor Centres:', doctorCentres);
 
     await mongoose.connection.close();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching Doctor Centres:', error);
   }
 }

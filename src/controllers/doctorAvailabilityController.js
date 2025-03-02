@@ -14,7 +14,7 @@ async function getDoctorAvailability(id) {
   const doctorAvailability = await DoctorAvailability.findById(id)
     .populate('doctorId', 'doctorName')
     .populate('availabilityId', 'date startTime endTime isBooked');
-    
+
   if (!doctorAvailability) {
     const error = new Error(`Doctor availability with id ${id} not found`);
     error.status = 404;
@@ -41,7 +41,7 @@ async function updateDoctorAvailability(id, data) {
   const updatedDoctorAvailability = await DoctorAvailability.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedDoctorAvailability) {

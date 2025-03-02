@@ -1,5 +1,6 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
+// eslint-disable-next-line import/no-extraneous-dependencies
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const app = require('../app');
 
@@ -14,13 +15,13 @@ describe('Patient Authentication', () => {
 
     // Seed the database by creating dummy patient (registration)
     testPatient = {
-      firstName: "Jeff",
-      lastName: "Test",
-      email: "mynameisjeff@gmail.com",
-      dateOfBirth: "1990-01-01T00:00:00.000Z",
-      address: { street: "123 Test St", city: "Testville" },
-      phoneNumber: "1234567890",
-      password: "DaBestPasswordEva4Jeff"
+      firstName: 'Jeff',
+      lastName: 'Test',
+      email: 'mynameisjeff@gmail.com',
+      dateOfBirth: '1990-01-01T00:00:00.000Z',
+      address: { street: '123 Test St', city: 'Testville' },
+      phoneNumber: '1234567890',
+      password: 'DaBestPasswordEva4Jeff',
     };
 
     await request(app).post('/patients').send(testPatient);
@@ -36,7 +37,7 @@ describe('Patient Authentication', () => {
     const res = await request(app)
       .post('/patients/login')
       .send({ email: testPatient.email, password: testPatient.password });
-        
+
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('token');
     expect(res.body).toHaveProperty('status', 'success');
@@ -47,7 +48,7 @@ describe('Patient Authentication', () => {
     const res = await request(app)
       .post('/patients/login')
       .send({ email: 'manameisjeff@gmail.com', password: testPatient.password });
-    
+
     expect(res.status).toBe(401);
     expect(res.body).toHaveProperty('status', 'error');
   });
@@ -57,7 +58,7 @@ describe('Patient Authentication', () => {
     const res = await request(app)
       .post('/patients/login')
       .send({ email: testPatient.email, password: 'DeBestPasswordEva4Jeff' });
-    
+
     expect(res.status).toBe(401);
     expect(res.body).toHaveProperty('status', 'error');
   });
@@ -68,18 +69,18 @@ describe('Patient Authentication', () => {
     const loginRes = await request(app)
       .post('/patients/login')
       .send({ email: testPatient.email, password: testPatient.password });
-      
-    const token = loginRes.body.token;
+
+    const { token } = loginRes.body.token;
 
     // Then access a route
     const res = await request(app)
       .get('/patients/profile')
       .set('Authorization', `Bearer ${token}`);
-      
+
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('firstName', testPatient.firstName);
   });
-  
+
   // Test route error with invalid token
   test('Should return 401 access route with invalid token', async () => {
     const res = await request(app).get('/patients/profile');

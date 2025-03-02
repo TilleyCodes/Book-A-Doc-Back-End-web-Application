@@ -15,21 +15,21 @@ describe('Medical Centre Routes', () => {
 
     // Create a test patient / admin and get auth token
     const testPatient = {
-      firstName: "Admin",
-      lastName: "User",
-      email: "admin@email.com",
-      dateOfBirth: "1990-01-01T00:00:00.000Z",
-      address: { street: "123 Admin St", city: "Adminville" },
-      phoneNumber: "9876 5432",
-      password: "AdminPassword123"
+      firstName: 'Admin',
+      lastName: 'User',
+      email: 'admin@email.com',
+      dateOfBirth: '1990-01-01T00:00:00.000Z',
+      address: { street: '123 Admin St', city: 'Adminville' },
+      phoneNumber: '9876 5432',
+      password: 'AdminPassword123',
     };
 
     await request(app).post('/patients').send(testPatient);
-    
+
     const loginRes = await request(app)
       .post('/patients/login')
       .send({ email: testPatient.email, password: testPatient.password });
-      
+
     authToken = loginRes.body.token;
   });
 
@@ -52,12 +52,12 @@ describe('Medical Centre Routes', () => {
         phone: '+61 39735 8466',
       },
     };
-    
+
     const res = await request(app)
       .post('/medicalCentres')
       .set('Authorization', `Bearer ${authToken}`)
       .send(centreData);
-      
+
     expect(res.status).toBe(201);
     expect(res.body).toHaveProperty('medicalCentreName', centreData.medicalCentreName);
     testMedicalCentre = res.body;
@@ -76,7 +76,7 @@ describe('Medical Centre Routes', () => {
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('medicalCentreName', testMedicalCentre.medicalCentreName);
   });
-  
+
   // Test update medical centre
   test('PATCH /medicalCentres/:id should update a specific medical centre', async () => {
     const updatedData = {
@@ -96,7 +96,7 @@ describe('Medical Centre Routes', () => {
       .patch(`/medicalCentres/${testMedicalCentre._id}`)
       .set('Authorization', `Bearer ${authToken}`)
       .send(updatedData);
-      
+
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('medicalCentreName', updatedData.medicalCentreName);
   });
@@ -106,9 +106,9 @@ describe('Medical Centre Routes', () => {
     const res = await request(app)
       .delete(`/medicalCentres/${testMedicalCentre._id}`)
       .set('Authorization', `Bearer ${authToken}`);
-      
+
     expect(res.status).toBe(200);
-    
+
     // Verify it's deleted
     const getRes = await request(app).get(`/medicalCentres/${testMedicalCentre._id}`);
     expect(getRes.status).toBe(404);

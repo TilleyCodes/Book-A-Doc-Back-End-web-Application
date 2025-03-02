@@ -7,12 +7,10 @@ async function fetchDoctors() {
 
     const doctors = await Doctor.find({})
       .populate('specialtyId', 'specialtyName');
-    // eslint-disable-next-line no-console
     console.log('Doctors:', doctors);
 
     await mongoose.connection.close();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching doctors:', error);
   }
 }

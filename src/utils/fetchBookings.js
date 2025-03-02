@@ -12,12 +12,10 @@ async function fetchBookings() {
       .populate('patientId', 'firstName lastName')
       .populate('doctorId', 'doctorName')
       .populate('availabilityId', 'date startTime endTime isBooked');
-    // eslint-disable-next-line no-console
     console.log('Current Bookings:', bookings);
 
     await mongoose.connection.close();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching bookings:', error);
   }
 }

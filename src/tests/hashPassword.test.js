@@ -30,11 +30,11 @@ describe('hashPassword plugin', () => {
     mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
     await mongoose.connect(uri);
-    
+
     // Create the model after connection
     User = mongoose.model('User', userSchema);
   });
-  
+
   afterAll(async () => {
     await mongoose.disconnect();
     await mongoServer.stop();

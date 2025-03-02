@@ -14,7 +14,10 @@
     "no-console": "off", // for Node 
     "consistent-return": "off", // For Express route handlers
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }], // For Express middleware
-    "import/no-unresolved": ["error", { "commonjs": true }]
+    "varsIgnorePattern": "bcrypt | jwt", 
+    "import/no-unresolved": ["error", { "commonjs": true }],
+    "no-underscore-dangle": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
   }
 }
   

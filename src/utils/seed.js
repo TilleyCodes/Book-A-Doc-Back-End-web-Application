@@ -229,10 +229,10 @@ async function seedDatabase() {
 
     // Create patients using the model to trigger middleware
     const insertedPatients = await Promise.all(
-      patientsData.map(patientData => {
+      patientsData.map((patientData) => {
         const patient = new Patient(patientData);
         return patient.save();
-      })
+      }),
     );
     console.log('Patients seeded with hashed passwords');
 

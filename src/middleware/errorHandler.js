@@ -1,7 +1,5 @@
-const errorHandler = (handler) => {
-  return (req, res, next) => {
-    Promise.resolve(handler(req, res, next)).catch(next);
-  };
+const errorHandler = (handler) => (req, res, next) => {
+  Promise.resolve(handler(req, res, next)).catch(next);
 };
 
 const globalErrorHandler = (err, req, res, next) => {
@@ -14,11 +12,11 @@ const globalErrorHandler = (err, req, res, next) => {
 
   // Format validation errors
   if (err.name === 'ValidationError') {
-    const validationErrors = Object.values(err.errors).map(error => error.message);
+    const validationErrors = Object.values(err.errors).map((error) => error.message);
     return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors: validationErrors
+      errors: validationErrors,
     });
   }
 
@@ -27,7 +25,7 @@ const globalErrorHandler = (err, req, res, next) => {
     return res.status(409).json({
       status: 'error',
       message: 'Duplicate value error',
-      field: Object.keys(err.keyValue)[0]
+      field: Object.keys(err.keyValue)[0],
     });
   }
 
@@ -35,7 +33,7 @@ const globalErrorHandler = (err, req, res, next) => {
   if (err.name === 'CastError' && err.kind === 'ObjectId') {
     return res.status(400).json({
       status: 'error',
-      message: 'Invalid ID format'
+      message: 'Invalid ID format',
     });
   }
 
@@ -43,18 +41,18 @@ const globalErrorHandler = (err, req, res, next) => {
   if (err.name === 'JsonWebTokenError') {
     return res.status(401).json({
       status: 'error',
-      message: 'Invalid token'
+      message: 'Invalid token',
     });
   }
 
   // Default error response
   return res.status(statusCode).json({
     status: 'error',
-    message: errorMessage
+    message: errorMessage,
   });
 };
 
 module.exports = {
   errorHandler,
-  globalErrorHandler
+  globalErrorHandler,
 };

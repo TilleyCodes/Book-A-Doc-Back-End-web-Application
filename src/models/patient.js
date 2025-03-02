@@ -74,7 +74,7 @@ const patientSchema = new mongoose.Schema({
 patientSchema.index({ firstName: 1, lastName: 1 });
 
 // comparePassword method
-patientSchema.methods.comparePassword = async function(candidatePassword) {
+patientSchema.methods.comparePassword = async function (candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {
@@ -85,7 +85,7 @@ patientSchema.methods.comparePassword = async function(candidatePassword) {
 // hashPassword middleware
 patientSchema.plugin(hashPassword, { saltRounds: 12 });
 
-patientSchema.methods.generateAuthToken = function createToken () {
+patientSchema.methods.generateAuthToken = function createToken() {
   // Create token payload
   const payload = { id: this._id, email: this.email };
 

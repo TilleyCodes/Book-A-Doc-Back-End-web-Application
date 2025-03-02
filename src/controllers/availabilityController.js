@@ -35,7 +35,7 @@ async function updateAvailability(id, data) {
   const updatedAvailability = await Availability.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedAvailability) {

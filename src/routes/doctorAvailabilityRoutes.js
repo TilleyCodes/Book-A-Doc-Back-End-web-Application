@@ -11,7 +11,7 @@ const auth = require('../middleware/authMiddleware');
 
 const doctorAvailabilityRouter = express.Router();
 
-//Validate doctor availabilty data middleware
+// Validate doctor availabilty data middleware
 const validateDoctorAvailabilityData = (req, res, next) => {
   const { doctorId, availabilityId } = req.body;
   const errors = [];
@@ -24,10 +24,10 @@ const validateDoctorAvailabilityData = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors 
+      errors,
     });
   }
   return next();
@@ -53,9 +53,9 @@ doctorAvailabilityRouter.post('/', auth, validateDoctorAvailabilityData, errorHa
 
 // UPDATE | http://localhost:3000/doctor_availability/doctorAvailId
 doctorAvailabilityRouter.patch('/:doctorAvailabilityId', auth, validateDoctorAvailabilityData, errorHandler(async (req, res) => {
-  const updatedDoctorAvailability = await updateDoctorAvailability (
-    req.params.doctorAvailabilityId, 
-    req.body
+  const updatedDoctorAvailability = await updateDoctorAvailability(
+    req.params.doctorAvailabilityId,
+    req.body,
   );
   res.status(200).json(updatedDoctorAvailability);
 }));

@@ -8,9 +8,9 @@ function auth(req, res, next) {
 
     // Check authorisation header is present, if not, throw 401 error
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ 
+      return res.status(401).json({
         status: 'error',
-        message: 'Authentication failed. No token provided.' 
+        message: 'Authentication failed. No token provided.',
       });
     }
 
@@ -24,20 +24,20 @@ function auth(req, res, next) {
       next();
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
-        return res.status(401).json({ 
+        return res.status(401).json({
           status: 'error',
-          message: 'Token has expired. Please log in again.' 
+          message: 'Token has expired. Please log in again.',
         });
       }
-      return res.status(401).json({ 
+      return res.status(401).json({
         status: 'error',
-        message: 'Authentication failed - Invalid token' 
+        message: 'Authentication failed - Invalid token',
       });
     }
   } catch (error) {
-    return res.status(500).json({ 
+    return res.status(500).json({
       status: 'error',
-      message: 'Internal server error during authentication' 
+      message: 'Internal server error during authentication',
     });
   }
 }

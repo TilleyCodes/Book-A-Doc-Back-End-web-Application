@@ -24,10 +24,10 @@ const validateSpecialtyData = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors 
+      errors,
     });
   }
   return next();
@@ -43,9 +43,9 @@ specialtyRouter.get('/', errorHandler(async (req, res) => {
 specialtyRouter.get('/:specialtyId', errorHandler(async (req, res) => {
   const specialty = await getSpecialty(req.params.specialtyId);
   if (!specialty) {
-    res.status(404).json({ 
+    res.status(404).json({
       status: 'error',
-      message: `Specialty with id ${req.params.specialtyId} not found`
+      message: `Specialty with id ${req.params.specialtyId} not found`,
     });
   }
   res.status(200).json(specialty);

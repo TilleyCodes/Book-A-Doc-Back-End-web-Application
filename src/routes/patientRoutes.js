@@ -14,9 +14,14 @@ const patientRouter = express.Router();
 
 // Validation middleware
 const validatePatientData = (req, res, next) => {
-  const { 
-    firstName, lastName, email, dateOfBirth, 
-    address, phoneNumber, password 
+  const {
+    firstName,
+    lastName,
+    email,
+    dateOfBirth,
+    address,
+    phoneNumber,
+    password,
   } = req.body;
   const errors = [];
 
@@ -43,10 +48,10 @@ const validatePatientData = (req, res, next) => {
   }
 
   if (errors.length > 0) {
-    return res.status(400).json({ 
+    return res.status(400).json({
       status: 'error',
       message: 'Validation failed',
-      errors 
+      errors,
     });
   }
   return next();
@@ -91,19 +96,19 @@ patientRouter.delete('/:patientId', auth, errorHandler(async (req, res) => {
 // LOGIN route for patients | http://localhost:3000/patients
 patientRouter.post('/login', errorHandler(async (req, res) => {
   const { email, password } = req.body;
-  
+
   if (!email || !password) {
     return res.status(400).json({
       status: 'error',
-      message: 'Email and password are required'
+      message: 'Email and password are required',
     });
   }
-  
+
   const { patient, token } = await loginPatient(email, password);
   return res.status(200).json({
     status: 'success',
     patient,
-    token
+    token,
   });
 }));
 

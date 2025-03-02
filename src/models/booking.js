@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     enum: ['completed', 'confirmed', 'cancelled'],
     default: 'confirmed',
-    required: [true, 'Booking status is required']
+    required: [true, 'Booking status is required'],
   },
   patientId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -11,8 +11,8 @@ async function getDoctorCentres() {
 // GET ONE doctor centre by ID
 async function getDoctorCentre(id) {
   const doctorCentre = await DoctorCentre.findById(id)
-  .populate('doctorId', 'doctorName')
-  .populate('medicalCentreId', 'medicalCentreName');
+    .populate('doctorId', 'doctorName')
+    .populate('medicalCentreId', 'medicalCentreName');
 
   if (!doctorCentre) {
     const error = new Error(`Doctor centre with id ${id} not found`);
@@ -40,7 +40,7 @@ async function updateDoctorCentre(id, data) {
   const updatedDoctorCentre = await DoctorCentre.findByIdAndUpdate(
     id,
     data,
-    { new: true, runValidators: true }
+    { new: true, runValidators: true },
   );
 
   if (!updatedDoctorCentre) {
