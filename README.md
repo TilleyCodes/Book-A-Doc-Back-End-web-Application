@@ -14,14 +14,10 @@
     - [MongoDB/Mongoose vs Alternatives](#mongodb-/-mongoose-vs-alternatives) 
     - [Authentication Approach](#authentication-approach)
 4. [Purpose of Chosen Technologies](#purpose-of-chosen-technologies)  
-    - [](#)  
-        - [](#)  
-        - [](#)
-    - [](#)  
-        - [](#)    
-        - [](#)  
-5. [Licensing of Chosen Technologies](#licensing-of-chosen-technologies)
-6. [Code Style Guide](#code-style-guide)
+5. [Licensing of Chosen Technologies](#licensing-of-chosen-technologies)  
+6. [Code Style Guide](#code-style-guide)  
+    - [Why We Chose Airbnb Style Guide](#why-we-chose-airbnb-style-guide)  
+    - [Implementation in Our Project](#implementation-in-our-project)  
 
 ## Dependent Software and Packages
 
@@ -117,3 +113,62 @@ All technologies used in Book A Doc were selected with careful consideration of 
 The MIT License is an advantage for our project as it allows for unrestricted use, modification, and distribution, requiring only that the license notice be included in any substantial portions of the software. This gives us the freedom to develop and potentially commercialise our application without significant licensing constraints.  
 
 ## Code Style Guide
+
+Throughout the Book A Doc project, we have adhered strictly to the Airbnb JavaScript Style Guide, which is widely recognised as an industry standard for JavaScript code quality and consistency. This choice was made for several reasons.  
+
+### Why We Chose Airbnb Style Guide
+
+- **Industry Standard:** The Airbnb style guide has been adopted by many companies and projects, making our codebase immediately familiar to new developers.  
+- **Comprehensive Rules:** It covers all aspects of JavaScript coding conventions, from spacing and indentation to complex patterns like error handling.  
+- **Promotes Best Practices:** The guide encourages patterns that improve code readability, maintainability, and helps avoid common JavaScript code issues.  
+- **Well-Documented:** Extensive documentation and examples make it easy for all team members to understand and implement the standards.  
+
+### Implementation in Our Project
+
+Our implementation of the Airbnb style guide is enforced through ESLint with the eslint-config-airbnb-base package. We've configured ESLint in our project with the following settings in `.eslintrc.json`:  
+
+```json
+{
+  "env": {
+    "browser": false,
+    "node": true,
+    "es6": true,
+    "es2021": true,
+    "jest": true
+  },
+  "extends": ["airbnb-base"],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "no-console": "off", // for Node 
+    "consistent-return": "off", // For Express route handlers
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }], // For Express middleware
+    "no-underscore-dangle": "off", // For MongoDB methods
+    "import/no-unresolved": ["error", { "commonjs": true }], // For Node 
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": ["**/*.test.js", "**/*.spec.js", "**/tests/**", "**/src/tests/**"]
+    }] // to allow dev imports for testing
+  }
+}
+```
+
+We've made minor adjustments to the standard Airbnb rules to optimise for a Node.js/Express.js backend application:  
+
+- Enabled console logging for server diagnostics and monitoring  
+- Modified function return consistency checks to accommodate Express.js route handler patterns  
+- Configured the unused variables rule to ignore the Express middleware's next parameter  
+- Disabled restrictions on underscore prefixed properties to work with MongoDB's _id field  
+- Tailored import resolution for CommonJS module system  
+- Allowed development dependencies in test files to support our comprehensive testing strategy  
+
+Throughout the codebase, we've maintained consistent:
+
+- Two space indentation  
+- Semicolon usage  
+- Arrow function styling  
+- Variable declaration practices (using const/let appropriately)  
+- Object and array formatting  
+- Error handling patterns  
+
+This consistent approach has resulted in a codebase that is highly readable, maintainable, and adheres to industry best practices, making onboarding new developers and future maintenance significantly easier.  

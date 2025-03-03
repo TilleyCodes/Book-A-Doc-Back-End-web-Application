@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const Patient = require('../models/patient');
 
 // GET ALL data from PatientsModel db

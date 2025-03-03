@@ -14,10 +14,10 @@
     "no-console": "off", // for Node 
     "consistent-return": "off", // For Express route handlers
     "no-unused-vars": ["error", { "argsIgnorePattern": "next" }], // For Express middleware
-    "varsIgnorePattern": "bcrypt | jwt", 
-    "import/no-unresolved": ["error", { "commonjs": true }],
-    "no-underscore-dangle": "off",
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+    "no-underscore-dangle": "off", // For MongoDB methods
+    "import/no-unresolved": ["error", { "commonjs": true }], // For Node 
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": ["**/*.test.js", "**/*.spec.js", "**/tests/**", "**/src/tests/**"]
+    }] // to allow dev imports for testing
   }
 }
-  

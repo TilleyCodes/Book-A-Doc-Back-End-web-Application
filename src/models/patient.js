@@ -74,7 +74,7 @@ const patientSchema = new mongoose.Schema({
 patientSchema.index({ firstName: 1, lastName: 1 });
 
 // comparePassword method
-patientSchema.methods.comparePassword = async function (candidatePassword) {
+patientSchema.methods.comparePassword = async function comparePassword(candidatePassword) {
   try {
     return await bcrypt.compare(candidatePassword, this.password);
   } catch (error) {

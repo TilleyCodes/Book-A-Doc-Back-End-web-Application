@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const Patient = require('../models/patient');
 const Availability = require('../models/availability');

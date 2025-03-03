@@ -2,12 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { errorHandler, globalErrorHandler } = require('./middleware/errorHandler');
-
-// Import models for testing routes
-const Patient = require('./models/patient');
-const MedicalCentre = require('./models/medicalCentre');
-const Specialty = require('./models/specialty');
+const { globalErrorHandler } = require('./middleware/errorHandler');
 
 // Import all routers
 const authRouter = require('./routes/authRoutes');
