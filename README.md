@@ -10,8 +10,8 @@
     - [Production Environment](#production-environment) 
     - [Scalability Considerations](#scalability-considerations)  
 3. [Comparison to Alternative Technology Choices](#comparison-to-alternative-technology-choices) 
-    - [Express.js vs Alternatives](#express.js-vs-alternatives) 
-    - [MongoDB/Mongoose vs Alternatives](#mongodb-/-mongoose-vs-alternatives) 
+    - [Express.js vs Alternatives](#expressjs-vs-alternatives) 
+    - [MongoDB/Mongoose vs Alternatives](#mongodbmongoose-vs-alternatives) 
     - [Authentication Approach](#authentication-approach)
 4. [Purpose of Chosen Technologies](#purpose-of-chosen-technologies)  
 5. [Licensing of Chosen Technologies](#licensing-of-chosen-technologies)  
@@ -21,7 +21,7 @@
 
 ## Dependent Software and Packages
 
-The Book A Doc application depends on several key software packages, each chosen to fulfil specific requirements of a modern backend API system:  
+The Book A Doc application depends on several key software packages, each chosen to fulfil specific requirements of a modern backend API system.  
 
 ### Core Dependencies:  
 
@@ -76,7 +76,7 @@ Several technology alternatives were considered before finalising our stack. Her
 - **Express.js vs NestJS:** Express was selected over NestJS for its simplicity and lower learning curve. NestJS offers more structure and angular like architecture but introduces additional complexity that wasn't necessary for this project.  
 - **Express.js vs Fastify:** Though Fastify offers better performance benchmarks, Express's mature ecosystem, extensive documentation, and widespread industry adoption made it a safer choice for our team's expertise.  
 
-### MongoDB/Mongoose vs Alternatives
+### MongoDB/Mongoose vs Alternatives:
 
 - **MongoDB vs PostgreSQL:** MongoDB's document model aligns perfectly with our JSON based API, allowing for flexible schema evolution. PostgreSQL would offer stronger transactional guarantees but at the cost of schema flexibility.  
 - **Mongoose vs Native MongoDB Driver:** Mongoose's schema validation, middleware, and query building capabilities significantly reduced our development time compared to using the native driver directly.  
