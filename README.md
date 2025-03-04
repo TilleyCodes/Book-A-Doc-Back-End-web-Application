@@ -83,7 +83,7 @@ Several technology alternatives were considered before finalising our stack. Her
 
 ### Authentication Approach:  
 
-- **JWT vs Session based Authentication:** JWT tokens enable stateless authentication, eliminating the need for server-side session storage and simplifying scaling. Session-based auth would have required additional dependencies like Redis for session management.  
+- **JWT vs Session based Authentication:** JWT tokens enable stateless authentication, eliminating the need for server side session storage and simplifying scaling. Session based auth would have required additional dependencies like Redis for session management.  
 
 ## Purpose of Chosen Technologies
 
