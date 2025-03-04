@@ -370,7 +370,6 @@ async function seedDatabase() {
     ];
 
     // Insert bookingData
-    await Doctor.insertMany(doctorsData);
     await DoctorCentre.insertMany(doctorCentresData);
     await Booking.insertMany(bookingsData);
     await DoctorAvailability.insertMany(doctorAvailabilityData);
