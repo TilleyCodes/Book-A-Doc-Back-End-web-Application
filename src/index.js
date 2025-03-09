@@ -5,8 +5,11 @@ const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
-    // Connect to MongoDB
-    await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db', {
+    /*
+    // connect to local host
+    //await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db', {
+    // Connect to MongoDB */
+    await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });

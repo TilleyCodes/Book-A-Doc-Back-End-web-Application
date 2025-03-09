@@ -243,36 +243,44 @@ async function seedDatabase() {
 
     const doctorsData = [
       {
-        doctorName: 'Pepe Poo',
+        doctorName: 'Dr Pepe Poo',
         specialtyId: insertedSpecialties[0].id,
       },
       {
-        doctorName: 'Bandit Boy',
+        doctorName: 'Dr Bandit Boy',
         specialtyId: insertedSpecialties[1].id,
       },
       {
-        doctorName: 'Yogi Bear',
+        doctorName: 'Dr Yogi Bear',
         specialtyId: insertedSpecialties[2].id,
       },
       {
-        doctorName: 'Mia Moo',
+        doctorName: 'Dr Mia Moo',
         specialtyId: insertedSpecialties[3].id,
       },
       {
-        doctorName: 'Ella Bell',
+        doctorName: 'Dr Ella Bell',
         specialtyId: insertedSpecialties[4].id,
       },
       {
-        doctorName: 'Frank Fudge',
+        doctorName: 'Dr Frank Fudge',
         specialtyId: insertedSpecialties[5].id,
       },
       {
-        doctorName: 'Coco Nut',
+        doctorName: 'Dr Coco Nut',
         specialtyId: insertedSpecialties[2].id,
       },
       {
-        doctorName: 'Snowy Ball',
+        doctorName: 'Dr Snowy Ball',
         specialtyId: insertedSpecialties[4].id,
+      },
+      {
+        doctorName: 'Dr Binkie Duck',
+        specialtyId: insertedSpecialties[0].id,
+      },
+      {
+        doctorName: 'Dr Sisi Lion',
+        specialtyId: insertedSpecialties[1].id,
       },
     ];
 
@@ -298,7 +306,7 @@ async function seedDatabase() {
       },
       {
         doctorId: insertedDoctors[4].id,
-        medicalCentreId: insertedMedicalCentres[1].id,
+        medicalCentreId: insertedMedicalCentres[4].id,
       },
       {
         doctorId: insertedDoctors[5].id,
@@ -311,6 +319,14 @@ async function seedDatabase() {
       {
         doctorId: insertedDoctors[7].id,
         medicalCentreId: insertedMedicalCentres[2].id,
+      },
+      {
+        doctorId: insertedDoctors[8].id,
+        medicalCentreId: insertedMedicalCentres[0].id,
+      },
+      {
+        doctorId: insertedDoctors[9].id,
+        medicalCentreId: insertedMedicalCentres[5].id,
       },
     ];
 
@@ -336,6 +352,7 @@ async function seedDatabase() {
       {
         status: 'confirmed',
         patientId: insertedDoctors[4].id,
+        doctorId: insertedDoctors[2].id,
         availabilityId: insertedAvailabilities[3].id,
       },
       {
