@@ -18,6 +18,9 @@
 6. [Code Style Guide](#code-style-guide)  
     - [Why We Chose Airbnb Style Guide](#why-we-chose-airbnb-style-guide)  
     - [Implementation in Our Project](#implementation-in-our-project)  
+7. [Deployment](#deployment)  
+    - [MongoDB](#mongodb)  
+    - [Render](#render) 
 
 ## Dependent Software and Packages
 
@@ -172,3 +175,15 @@ Throughout the codebase, we've maintained consistent:
 - Error handling patterns  
 
 This consistent approach has resulted in a codebase that is highly readable, maintainable, and adheres to industry best practices, making onboarding new developers and future maintenance significantly easier.  
+
+## Deployment
+
+The Book a Doc application is deployed using a combination of MongoDB for database management and Render for hosting the backend. This setup ensures a scalable, secure, and easily maintainable deployment.  
+
+### MongoDB
+
+We use MongoDB Atlas, a fully managed cloud database, to store and manage all application data. MongoDB Atlas provides high availability, automatic scaling, and built-in security features, making it an ideal choice for production deployments.  
+
+### Render
+
+The backend is deployed on Render, a cloud-based hosting platform that offers seamless deployment and automatic scaling. Render provides continuous deployment from our Git repository, ensuring that updates are deployed efficiently with minimal downtime.  
