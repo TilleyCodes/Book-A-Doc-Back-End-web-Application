@@ -18,6 +18,11 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Doctor',
     required: [true, 'Doctor ID is required'],
   },
+  medicalCentreId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'MedicalCentre',
+    required: [true, 'Medical Centre ID is required'],
+  },
   availabilityId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Availability',

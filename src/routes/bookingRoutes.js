@@ -16,6 +16,7 @@ const validateBookingData = (req, res, next) => {
   const {
     patientId,
     doctorId,
+    medicalCentreId,
     availabilityId,
     status,
   } = req.body;
@@ -26,6 +27,9 @@ const validateBookingData = (req, res, next) => {
   }
   if (!doctorId) {
     errors.push('Doctor ID is required');
+  }
+  if (!medicalCentreId) {
+    errors.push('Medical Centre Id is required');
   }
   if (!availabilityId) {
     errors.push('Availability ID is required');

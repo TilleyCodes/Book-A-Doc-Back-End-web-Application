@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 require('../models/patient');
 require('../models/doctor');
+require('../models/medicalCentre');
 require('../models/availability');
 const Booking = require('../models/booking');
 
@@ -11,6 +12,7 @@ async function fetchBookings() {
     const bookings = await Booking.find({})
       .populate('patientId', 'firstName lastName')
       .populate('doctorId', 'doctorName')
+      .populate('medicalCentreId', 'medicalCentreName')
       .populate('availabilityId', 'date startTime endTime isBooked');
     console.log('Current Bookings:', bookings);
 
