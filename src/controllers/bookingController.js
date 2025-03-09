@@ -5,6 +5,7 @@ async function getBookings() {
   const bookings = await Booking.find()
     .populate('patientId', 'firstName lastName')
     .populate('doctorId', 'doctorName')
+    .populate('medicalCentreId', 'medicalCentreName')
     .populate('availabilityId', 'date startTime endTime')
     .sort({ createdAt: -1 });
   return bookings;
@@ -15,6 +16,7 @@ async function getBooking(id) {
   const booking = await Booking.findById(id)
     .populate('patientId', 'firstName lastName')
     .populate('doctorId', 'doctorName')
+    .populate('medicalCentreId', 'medicalCentreName')
     .populate('availabilityId', 'date startTime endTime');
 
   if (!booking) {

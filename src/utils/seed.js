@@ -103,6 +103,12 @@ const availabilitiesData = [
     endTime: '17:00',
     isBooked: true,
   },
+  {
+    date: new Date('2025-03-28'),
+    startTime: '16:00',
+    endTime: '17:00',
+    isBooked: true,
+  },
 ];
 
 // Sample medical centre data to be seeded
@@ -319,30 +325,43 @@ async function seedDatabase() {
         status: 'confirmed',
         patientId: insertedPatients[0].id,
         doctorId: insertedDoctors[7].id,
+        medicalCentreId: insertedMedicalCentres[0].id,
         availabilityId: insertedAvailabilities[0].id,
       },
       {
         status: 'confirmed',
         patientId: insertedPatients[1].id,
         doctorId: insertedDoctors[6].id,
+        medicalCentreId: insertedMedicalCentres[1].id,
         availabilityId: insertedAvailabilities[1].id,
       },
       {
         status: 'cancelled',
         patientId: insertedPatients[2].id,
         doctorId: insertedDoctors[5].id,
+        medicalCentreId: insertedMedicalCentres[2].id,
         availabilityId: insertedAvailabilities[2].id,
       },
       {
         status: 'confirmed',
-        patientId: insertedDoctors[4].id,
+        patientId: insertedPatients[3].id,
+        doctorId: insertedDoctors[4].id,
+        medicalCentreId: insertedMedicalCentres[3].id,
         availabilityId: insertedAvailabilities[3].id,
       },
       {
         status: 'confirmed',
         patientId: insertedPatients[4].id,
         doctorId: insertedDoctors[3].id,
+        medicalCentreId: insertedMedicalCentres[4].id,
         availabilityId: insertedAvailabilities[4].id,
+      },
+      {
+        status: 'confirmed',
+        patientId: insertedPatients[2].id,
+        doctorId: insertedDoctors[5].id,
+        medicalCentreId: insertedMedicalCentres[5].id,
+        availabilityId: insertedAvailabilities[5].id,
       },
     ];
 
