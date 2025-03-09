@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 const Patient = require('../models/patient');
 const Availability = require('../models/availability');
@@ -217,7 +218,7 @@ const specialtiesData = [
 // Function to connect to DB and seed data
 async function seedDatabase() {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/book_a_doc_db');
+    await mongoose.connect(process.env.MONGODB_URI);
 
     console.log('Database connected');
 
