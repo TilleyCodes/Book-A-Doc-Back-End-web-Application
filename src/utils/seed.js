@@ -270,7 +270,7 @@ async function seedDatabase() {
         specialtyId: insertedSpecialties[4].id,
       },
       {
-        doctorName: 'Dr Frank Fudge',
+        doctorName: 'Dr Fudge Ti',
         specialtyId: insertedSpecialties[5].id,
       },
       {
@@ -282,7 +282,7 @@ async function seedDatabase() {
         specialtyId: insertedSpecialties[4].id,
       },
       {
-        doctorName: 'Dr Binkie Duck',
+        doctorName: 'Dr Binkie Di',
         specialtyId: insertedSpecialties[0].id,
       },
       {
