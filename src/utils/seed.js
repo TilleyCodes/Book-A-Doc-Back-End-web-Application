@@ -254,7 +254,7 @@ async function seedDatabase() {
         specialtyId: insertedSpecialties[0].id,
       },
       {
-        doctorName: 'Dr Bandit Boy',
+        doctorName: 'Dr Bandi Boy',
         specialtyId: insertedSpecialties[1].id,
       },
       {
